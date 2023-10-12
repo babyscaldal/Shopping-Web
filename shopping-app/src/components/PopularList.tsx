@@ -1,4 +1,3 @@
-import React from "react"
 import { productList } from "../data/data"
 import ProductCard from "./ProductCard"
 import { Col, Container, Row } from "react-bootstrap"

@@ -12,7 +12,7 @@ const Policy = styled.div`
   padding: 30px;
 `
 
-const RefundPolicty = () => {
+const RefundPolicy = () => {
   useTitle("Refund Policy")
 
   return (
@@ -28,4 +28,4 @@ const RefundPolicty = () => {
   )
 }
 
-export default RefundPolicty
+export default RefundPolicy

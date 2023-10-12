@@ -8,7 +8,6 @@ import Layout from "../components/Layout"
 import OurStore from "../pages/OurStore"
 import Blog from "../pages/Blog"
 import Compare from "../pages/Compare"
-import WishList from "../pages/WishList"
 import Login from "../pages/Login"
 import Cart from "../pages/Cart"
 import SignUp from "../pages/SignUp"
@@ -17,10 +16,12 @@ import ResetPassword from "../pages/ResetPassword"
 import SingleBlog from "../components/SingleBlog"
 import PrivacyPolicy from "../pages/PrivatePolicy"
 import TermAndCondition from "../pages/TermAndCondition"
-import RefundPolicty from "../pages/RefundPolicy"
+import RefundPolicy from "../pages/RefundPolicy"
 import ShippingPolicy from "../pages/ShippingPolicty"
 import ProductDetail from "../pages/ProductDetail"
 import Checkout from "../pages/CheckOut"
+import Favorite from "@mui/icons-material/Favorite"
+import FavoriteList from "../pages/FavoriteList"
 
 const publicRoutes = [
   {
@@ -68,8 +69,8 @@ const publicRoutes = [
         isIndex: false,
       },
       {
-        path: "wishlist",
-        element: WishList,
+        path: "favorite",
+        element: FavoriteList,
         isIndex: false,
       },
       {
@@ -104,7 +105,7 @@ const publicRoutes = [
       },
       {
         path: "refund-policy",
-        element: RefundPolicty,
+        element: RefundPolicy,
         isIndex: false,
       },
       {

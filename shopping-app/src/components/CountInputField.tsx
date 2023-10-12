@@ -8,9 +8,6 @@ import {
   styled,
 } from "@mui/material"
 import { useState } from "react"
-import "react-toastify/dist/ReactToastify.css"
-import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { selectedCartListState } from "../app/Redux/Slices/CartSlice"
 
 interface ICountInputField {
   id: string
@@ -34,9 +31,6 @@ export default function CountInputField({ id }: ICountInputField) {
       setCount((count) => count - 1)
     }
   }
-
-  const selectedCartList = useAppSelector(selectedCartListState)
-  const dispatch = useAppDispatch()
 
   return (
     <FormControl

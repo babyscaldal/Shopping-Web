@@ -113,7 +113,7 @@ function ProductDetail() {
     img: "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
   }
 
-  const [orderedProduct, setorderedProduct] = useState(true)
+  const [orderedProduct] = useState(true)
 
   const closeModal = () => {}
   return (

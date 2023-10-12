@@ -1,4 +1,3 @@
-import React from "react"
 import styled from "styled-components"
 import useTitle from "../hooks/useTitle"
 import { Container, Row, Col } from "react-bootstrap"

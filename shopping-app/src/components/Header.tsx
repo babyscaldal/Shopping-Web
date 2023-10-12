@@ -90,7 +90,7 @@ export default function Header() {
               <div className="header-upper-links d-flex align-items-center justify-content-end gap-30">
                 <div>
                   <NavLink
-                    style={({ isActive, isPending }) => {
+                    style={({ isActive }) => {
                       return {
                         fontSize: "18px",
                         color: isActive
@@ -107,7 +107,7 @@ export default function Header() {
                 </div>
                 <div>
                   <NavLink
-                    style={({ isActive, isPending }) => {
+                    style={({ isActive }) => {
                       return {
                         fontSize: "18px",
                         color: isActive
@@ -115,7 +115,7 @@ export default function Header() {
                           : "var(--color-ededed)",
                       }
                     }}
-                    to="wishlist"
+                    to="favorite"
                     className="d-flex align-items-center gap-10"
                   >
                     <Badge
@@ -133,7 +133,7 @@ export default function Header() {
                 </div>
                 <div>
                   <NavLink
-                    style={({ isActive, isPending }) => {
+                    style={({ isActive }) => {
                       return {
                         fontSize: "18px",
                         color: isActive
@@ -150,7 +150,7 @@ export default function Header() {
                 </div>
                 <div>
                   <NavLink
-                    style={({ isActive, isPending }) => {
+                    style={({ isActive }) => {
                       return {
                         fontSize: isActive ? "16px" : "14px",
                         fontWeight: isActive ? "bolder" : "",
@@ -200,7 +200,7 @@ export default function Header() {
                       <StyledNavLink
                         key={index}
                         to={link.to}
-                        style={({ isActive, isPending }) => {
+                        style={({ isActive }) => {
                           return {
                             fontSize: "16px",
                             color: isActive

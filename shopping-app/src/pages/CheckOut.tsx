@@ -50,7 +50,7 @@ const Checkout = () => {
             </CheckoutLeftData>
           </Col>
           <Col xs={6}>
-            <div className="border-bottom py-2">
+            <div className="border-bottom pb-4">
               <CheckoutItem />
             </div>
             <div className="border-bottom py-4">

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import AddAlertIcon from "@mui/icons-material/AddAlert"
 import CustomOutLineInputField from "./CustomOutLineInputField"
 
-export const subcribeValueSchema = z.object({
+export const subscribeValueSchema = z.object({
   subscribe: z
     .string()
     .email("Invalid email")
@@ -14,7 +14,7 @@ export const subcribeValueSchema = z.object({
 export default function SubscribeBarForm() {
   const form = useForm({
     defaultValues: { subscribe: "" },
-    resolver: zodResolver(subcribeValueSchema),
+    resolver: zodResolver(subscribeValueSchema),
     mode: "all",
   })
 

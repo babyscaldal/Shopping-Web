@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from "react-hook-form"
 import CustomCheckbox from "./CustomCheckbox"
-import { availablityOptions, sizeOptions } from "../data/checkboxData"
+import { availabilityOptions, sizeOptions } from "../data/checkboxData"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { SubTitle } from "../pages/OurStore"
@@ -35,8 +35,8 @@ export default function FilterSideBarForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <SubTitle>Availablity</SubTitle>
-        <CustomCheckbox options={availablityOptions} name="availability" />
+        <SubTitle>Availability</SubTitle>
+        <CustomCheckbox options={availabilityOptions} name="availability" />
         <SubTitle>Price</SubTitle>
         <div className="d-flex align-items-center gap-10">
           <CustomTextField
@@ -74,7 +74,6 @@ export default function FilterSideBarForm() {
           >
             Reset
           </Button>
-          {/* <button type="submit">Submit</button> */}
         </div>
       </form>
     </FormProvider>

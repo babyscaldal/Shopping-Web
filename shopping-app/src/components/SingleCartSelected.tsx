@@ -4,22 +4,16 @@ import { ICartList } from "./CartTable"
 import {
   addToSelectedList,
   removeFromSelectedList,
-  selectedCartListState,
 } from "../app/Redux/Slices/CartSlice"
 import { Checkbox } from "@mui/material"
 
 interface ISingleCartSelected {
-  name: string
   item: ICartList
 }
 
-export default function SingleCartSelected({
-  name,
-  item,
-}: ISingleCartSelected) {
+export default function SingleCartSelected({ item }: ISingleCartSelected) {
   const isSelectAll = useAppSelector((state) => state.cart.isSelectAll)
 
-  const selectedCartList = useAppSelector(selectedCartListState)
   const dispatch = useAppDispatch()
 
   const [isSelectSingle, setIsSelectSingle] = useState(false)

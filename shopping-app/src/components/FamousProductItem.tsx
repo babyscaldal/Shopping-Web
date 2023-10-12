@@ -1,7 +1,5 @@
-import React from "react"
-import images from "../Image/images"
 import styled from "styled-components"
-import { IFamouseList } from "../data/data"
+import { IFamousList } from "../data/data"
 
 const FamousContent = styled.div`
   top: 10%;
@@ -13,7 +11,6 @@ const FamousItem = styled.div`
   width: 100%;
   box-shadow: 0 0 10px #0000001a;
 
-  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   transition: all 0.3s;
 
   &:hover {
@@ -22,7 +19,7 @@ const FamousItem = styled.div`
 `
 
 interface IFamousProductItem {
-  famous: IFamouseList
+  famous: IFamousList
   index?: number
 }
 

@@ -236,14 +236,14 @@ export const productCardActionIcons: string[] = [
   images.addcart,
 ]
 
-export interface IFamouseList {
+export interface IFamousList {
   image: string
   detail: string
   productname: string
   description: string
 }
 
-export const famousList: IFamouseList[] = [
+export const famousList: IFamousList[] = [
   {
     image: images.famous1,
     detail: "Big Screen",

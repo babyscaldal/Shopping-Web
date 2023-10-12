@@ -1,21 +1,20 @@
 import { useForm, FormProvider } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Col, Container, Row, Stack } from "react-bootstrap"
-import CustomTextAreaField from "./CustomTextAreaField"
+import { Col, Container, Row } from "react-bootstrap"
 import CustomTextField from "./CustomTextField"
 import CustomSelectField from "./CustomSelectField"
 import { Button, MenuItem } from "@mui/material"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 
 export const checkoutFormValueSchema = z.object({
-  country: z.string().min(1, { message: "Name is required" }),
-  firstName: z.string().min(1, { message: "Name is required" }),
-  lastName: z.string().min(1, { message: "Name is required" }),
-  address: z.string().min(1, { message: "Name is required" }),
-  apartment: z.string().min(1, { message: "Comments is required" }),
-  city: z.string().min(1, { message: "Comments is required" }),
-  state: z.string().min(1, { message: "Comments is required" }),
+  country: z.string().min(1, { message: "Country is required" }),
+  firstName: z.string().min(1, { message: "First Name is required" }),
+  lastName: z.string().min(1, { message: "Last Name is required" }),
+  address: z.string().min(1, { message: "Address is required" }),
+  apartment: z.string().min(1, { message: "Apartment is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  state: z.string().min(1, { message: "State is required" }),
   zipCode: z.number().min(1, { message: "ZipCode is required" }),
 })
 
@@ -117,10 +116,14 @@ export default function CheckoutForm() {
             </Col>
           </Row>
           <div className="d-flex justify-content-between my-3">
-            <Button startIcon={<ArrowBackIosIcon />} variant="text">
+            <Button
+              color="secondary"
+              startIcon={<ArrowBackIosIcon />}
+              variant="text"
+            >
               Return to cart
             </Button>
-            <Button variant="contained" type="submit">
+            <Button color="warning" variant="contained" type="submit">
               Continue to shipping
             </Button>
           </div>

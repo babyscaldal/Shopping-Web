@@ -74,7 +74,7 @@ export default function Footer() {
               </div>
             </Col>
             <Col xs={3}>
-              <h4 className="text-white my-4">Infomation</h4>
+              <h4 className="text-white my-4">Information</h4>
               <FooterLinks className="d-flex flex-column ">
                 <Link to="/privacy-policy" className="text-white py-2 mb-1">
                   Privacy Policy

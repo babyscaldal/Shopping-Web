@@ -3,7 +3,7 @@ export interface IOption {
   label: string
 }
 
-export const availablityOptions: IOption[] = [
+export const availabilityOptions: IOption[] = [
   { value: "in-stock", label: "In Stock (1)" },
   { value: "out-of-stock", label: "Out of Stock (1)" },
 ]

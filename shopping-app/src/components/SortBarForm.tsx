@@ -25,8 +25,6 @@ export default function SortBarForm() {
             </MenuItem>
           ))}
         </CustomSelectField>
-
-        {/* <button type="submit">Submit</button> */}
       </form>
     </FormProvider>
   )

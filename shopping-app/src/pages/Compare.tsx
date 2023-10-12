@@ -79,7 +79,7 @@ export default function Compare() {
                     <p>Watch</p>
                   </ProductDetail>
                   <ProductDetail className="product-detail">
-                    <h5>Availablity:</h5>
+                    <h5>Availability:</h5>
                     <p>In Stock</p>
                   </ProductDetail>
                   <ProductDetail className="product-detail">
@@ -126,7 +126,7 @@ export default function Compare() {
                     <p>Watch</p>
                   </ProductDetail>
                   <ProductDetail className="product-detail">
-                    <h5>Availablity:</h5>
+                    <h5>Availability:</h5>
                     <p>In Stock</p>
                   </ProductDetail>
                   <ProductDetail className="product-detail">

@@ -52,26 +52,26 @@ export default function SignUpForm() {
           label="Username"
           placeholder="Username"
           type="text"
-          id={"signup-username"}
+          id={"signUp-username"}
           name="username"
         />
         <CustomTextField
           label="Email"
           placeholder="Email"
           type="text"
-          id={"signup-email"}
+          id={"signUp-email"}
           name="email"
         />
         <PasswordField
           label="Password"
           placeholder="Password"
-          id="signup-password"
+          id="signUp-password"
           name="password"
         />
         <PasswordField
           label="Confirm Password"
           placeholder="Confirm Password"
-          id="signup-confirmPassword"
+          id="signUp-confirmPassword"
           name="confirmPassword"
         />
         <div className="mt-2 d-flex justify-content-center gap-15 align-items-center">
