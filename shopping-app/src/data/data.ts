@@ -8,7 +8,7 @@ export const navOption = [
   },
   {
     title: "Our Storer",
-    to: "/store",
+    to: "/product",
   },
   {
     title: "Blogs",

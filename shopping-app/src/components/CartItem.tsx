@@ -1,9 +1,10 @@
-import { TableRow, TableCell } from "@mui/material"
+import { TableRow, TableCell, IconButton } from "@mui/material"
 import images from "../Image/images"
 import Image from "./Image"
 import SingleCartSelected from "./SingleCartSelected"
 import { ICartList } from "./CartTable"
 import CountInputField from "./CountInputField"
+import DeleteIcon from "@mui/icons-material/Delete"
 
 interface ICartItem {
   item: ICartList
@@ -39,9 +40,14 @@ export const CartItem = ({ item }: ICartItem) => {
       </TableCell>
       <TableCell align="center">$100.00</TableCell>
       <TableCell align="center">
-        <CountInputField id={"cart-form-quantity"} name={"quantity"} />
+        <CountInputField id={"cart-form-quantity"} />
       </TableCell>
       <TableCell align="center">20</TableCell>
+      <TableCell align="center">
+        <IconButton color="warning" aria-label="delete" size="small">
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </TableCell>
     </TableRow>
   )
 }

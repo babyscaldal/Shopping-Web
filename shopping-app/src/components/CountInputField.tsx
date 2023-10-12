@@ -14,7 +14,6 @@ import { selectedCartListState } from "../app/Redux/Slices/CartSlice"
 
 interface ICountInputField {
   id: string
-  name: string
 }
 
 const TextCenterInput = styled(OutlinedInput)`
@@ -46,6 +45,7 @@ export default function CountInputField({ id }: ICountInputField) {
         textAlign: "center",
         bgcolor: "#fff",
         borderRadius: "4px",
+        width: "150px",
       }}
       variant="outlined"
     >
@@ -60,7 +60,11 @@ export default function CountInputField({ id }: ICountInputField) {
         type="text"
         startAdornment={
           <InputAdornment position="start">
-            <IconButton onClick={decrease} sx={{ color: iconColor }} edge="end">
+            <IconButton
+              onClick={decrease}
+              sx={{ color: iconColor }}
+              edge="start"
+            >
               <RemoveIcon />
             </IconButton>
           </InputAdornment>

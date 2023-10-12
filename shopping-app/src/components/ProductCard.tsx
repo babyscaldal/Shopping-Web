@@ -1,19 +1,24 @@
-import { Card, Button, Carousel } from "react-bootstrap"
+import { Card } from "react-bootstrap"
 import Rating from "@mui/material/Rating"
 import styled, { keyframes } from "styled-components"
-import { IProductList, productCardActionIcons } from "../data/data"
-import { Link } from "react-router-dom"
-import images from "../Image/images"
+import { IProductList } from "../data/data"
 import Image from "./Image"
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
+import Favorite from "@mui/icons-material/Favorite"
+import { Checkbox, IconButton } from "@mui/material"
+import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined"
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined"
+import { NavLink } from "react-router-dom"
 
-interface IProcuctCard {
+interface IProductCard {
   product: IProductList
   grid?: number
 }
 
 const ActionBar = styled.div`
   top: 38px;
-  right: -20px;
+  right: -30px;
   transition: all 0.3s;
 `
 const slideIn = keyframes`
@@ -34,7 +39,6 @@ const ProductItem = styled(Card)`
   height: 100%;
   width: 100%;
   box-shadow: 0 0 10px #0000001a;
-  /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
   overflow: hidden;
   transition: all 0.25s linear;
   cursor: pointer;
@@ -45,7 +49,7 @@ const ProductItem = styled(Card)`
 
   &:hover ${ActionBar} {
     animation: ${slideIn} 0.3s forwards linear;
-    right: 10px;
+    right: 0px;
   }
 
   ${ImageWrapper} > ${StyledImage}:last-child {
@@ -96,98 +100,124 @@ const Detail = styled(Card.Text)`
 
 const WishListIcon = styled.div`
   top: 2%;
-  right: 12px;
+  right: 0px;
 `
 
-export default function ProductCard({ product, grid }: IProcuctCard) {
+export default function ProductCard({ product, grid }: IProductCard) {
   const { defaultImage, title, brand, price, hoverImage } = product
 
   return (
     <>
       {grid === 12 ? (
-        <ProductItem className="position-relative">
-          <WishListIcon className="position-absolute z-1">
-            <Link to="">
-              <img src={images.favorite} alt="wishlist" />
-            </Link>
-          </WishListIcon>
-          <div className="d-flex justify-content-between align-items-center">
+        <ProductItem>
+          <NavLink className="position-relative" to={"/product/:id"}>
+            <WishListIcon className="position-absolute z-1">
+              <Checkbox
+                size="small"
+                icon={<FavoriteBorder color="warning" />}
+                checkedIcon={<Favorite color="error" />}
+              />
+            </WishListIcon>
+            <div className="d-flex justify-content-between align-items-center">
+              <ImageWrapper>
+                <StyledImage src={defaultImage} height="200px" width="200px" />
+                <StyledImage src={hoverImage} height="200px" width="200px" />
+              </ImageWrapper>
+              <Card.Body className="pe-4">
+                <Brand>{brand}</Brand>
+                <Title>{title}</Title>
+                <Detail>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque
+                  rem corrupti, id non consequatur, ipsa ducimus, nam nesciunt
+                  culpa consequuntur voluptatem incidunt a laudantium facere
+                  repellat laborum necessitatibus sit magni est repudiandae
+                  perspiciatis deleniti error! Perferendis animi quibusdam eum
+                  libero, fuga illum ut optio autem atque necessitatibus
+                  blanditiis dolorem numquam.
+                </Detail>
+                <Rating
+                  size="small"
+                  name="simple-controlled"
+                  value={5}
+                  // onChange={(event, newValue) => {
+                  //   setValue(newValue)
+                  // }}
+                />
+                <Price className="text-success">${price}</Price>
+              </Card.Body>
+            </div>
+            <ActionBar className="position-absolute">
+              <div className="d-flex flex-column gap-15 z-1 ">
+                <IconButton size="small" aria-label="compare" color="warning">
+                  <CompareArrowsOutlinedIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton size="small" aria-label="views" color="warning">
+                  <VisibilityOutlinedIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  aria-label="add-to-cart"
+                  color="warning"
+                >
+                  <ShoppingBagOutlinedIcon fontSize="inherit" />
+                </IconButton>
+              </div>
+            </ActionBar>
+          </NavLink>
+        </ProductItem>
+      ) : (
+        <ProductItem>
+          <NavLink className="position-relative" to={"/product/:id"}>
+            <WishListIcon className="position-absolute z-1">
+              <Checkbox
+                size="small"
+                icon={<FavoriteBorder color="warning" />}
+                checkedIcon={<Favorite color="error" />}
+              />
+            </WishListIcon>
             <ImageWrapper>
-              <StyledImage src={defaultImage} height="200px" width="200px" />
-              <StyledImage src={hoverImage} height="200px" width="200px" />
+              <StyledImage
+                src={defaultImage}
+                height="200px"
+                width="100%"
+                contain
+              />
+              <StyledImage
+                src={hoverImage}
+                height="200px"
+                width="100%"
+                contain
+              />
             </ImageWrapper>
-            <Card.Body className="pe-4">
+            <Card.Body>
               <Brand>{brand}</Brand>
               <Title>{title}</Title>
-              <Detail>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque
-                rem corrupti, id non consequatur, ipsa ducimus, nam nesciunt
-                culpa consequuntur voluptatem incidunt a laudantium facere
-                repellat laborum necessitatibus sit magni est repudiandae
-                perspiciatis deleniti error! Perferendis animi quibusdam eum
-                libero, fuga illum ut optio autem atque necessitatibus
-                blanditiis dolorem numquam.
-              </Detail>
               <Rating
+                readOnly
                 size="small"
                 name="simple-controlled"
                 value={5}
-                // onChange={(event, newValue) => {
-                //   setValue(newValue)
-                // }}
               />
               <Price className="text-success">${price}</Price>
             </Card.Body>
-          </div>
-          <ActionBar className="position-absolute">
-            <div className="d-flex flex-column gap-15 z-1 ">
-              {productCardActionIcons.map((icon, index) => (
-                <Link key={index} to="">
-                  <img src={icon} alt="action-icons" />
-                </Link>
-              ))}
-            </div>
-          </ActionBar>
-        </ProductItem>
-      ) : (
-        <ProductItem className="position-relative">
-          <WishListIcon className="position-absolute z-1">
-            <Link to="">
-              <img src={images.favorite} alt="wishlist" />
-            </Link>
-          </WishListIcon>
-          <ImageWrapper>
-            <StyledImage
-              src={defaultImage}
-              height="200px"
-              width="100%"
-              contain
-            />
-            <StyledImage src={hoverImage} height="200px" width="100%" contain />
-          </ImageWrapper>
-          <Card.Body>
-            <Brand>{brand}</Brand>
-            <Title>{title}</Title>
-            {/* <Detail>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius sunt
-              hic similique. Assumenda eligendi fugit, consequatur saepe
-              delectus, repellendus a repellat in amet, minus unde beatae rem
-              doloremque nulla aliquam harum voluptate eum! Molestias, ipsum
-              dicta? Praesentium deleniti suscipit laudantium eum, sequi magni
-              minima nulla aperiam voluptas error saepe vel!
-            </Detail> */}
-            <Rating readOnly size="small" name="simple-controlled" value={5} />
-            <Price className="text-success">${price}</Price>
-          </Card.Body>
-          <ActionBar className="position-absolute">
-            <div className="d-flex flex-column gap-15 z-1 ">
-              {productCardActionIcons.map((icon, index) => (
-                <Link key={index} to="">
-                  <img src={icon} alt="action-icons" />
-                </Link>
-              ))}
-            </div>
-          </ActionBar>
+            <ActionBar className="position-absolute">
+              <div className="d-flex flex-column gap-15 z-1 ">
+                <IconButton size="small" aria-label="compare" color="warning">
+                  <CompareArrowsOutlinedIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton size="small" aria-label="views" color="warning">
+                  <VisibilityOutlinedIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  aria-label="add-to-cart"
+                  color="warning"
+                >
+                  <ShoppingBagOutlinedIcon />
+                </IconButton>
+              </div>
+            </ActionBar>
+          </NavLink>
         </ProductItem>
       )}
     </>

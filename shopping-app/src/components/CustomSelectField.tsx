@@ -1,13 +1,15 @@
-import { InputLabel, FormControl, Select } from "@mui/material"
-import { Controller, useForm, useFormContext } from "react-hook-form"
+import { FormControl, Select } from "@mui/material"
+import { Controller, useFormContext } from "react-hook-form"
 
 interface ICustomSelectField {
   label?: string
   children?: any
   name: string
+  width?: string
 }
 
 export default function CustomSelectField({
+  width,
   name,
   children,
   label,
@@ -18,11 +20,10 @@ export default function CustomSelectField({
       name={name}
       control={control}
       render={({ field: { value, onChange, onBlur } }) => {
-        // console.log(value)
         return (
           <FormControl fullWidth size="small">
             <Select
-              sx={{ width: "250px" }}
+              sx={{ width: width ? width : null, backgroundColor: "#fff" }}
               value={value}
               label={label}
               onChange={onChange}

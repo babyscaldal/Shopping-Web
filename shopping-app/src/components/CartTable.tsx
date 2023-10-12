@@ -9,6 +9,12 @@ import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import { CartItem } from "./CartItem"
 import AllCartSelected from "./AllCartSelected"
+import { useAppSelector } from "../app/hooks"
+import { selectedCartListState } from "../app/Redux/Slices/CartSlice"
+import DeleteIcon from "@mui/icons-material/Delete"
+import { IconButton } from "@mui/material"
+import Tippy from "@tippyjs/react"
+import "tippy.js/dist/tippy.css"
 
 export interface ICartList {
   id: number
@@ -19,6 +25,9 @@ export const cartList: ICartList[] = [{ id: 1 }, { id: 2 }, { id: 3 }]
 export default function CartTable() {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
+  const selectedCartList = useAppSelector(selectedCartListState)
+  console.log(selectedCartList)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
@@ -70,6 +79,16 @@ export default function CartTable() {
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Total
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                <Tippy
+                  placement="bottom"
+                  content="Delete all selected products"
+                >
+                  <IconButton color="warning" aria-label="delete" size="small">
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </Tippy>
               </TableCell>
             </TableRow>
           </TableHead>

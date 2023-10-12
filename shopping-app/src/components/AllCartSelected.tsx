@@ -1,20 +1,18 @@
-import { Form } from "react-bootstrap"
 import { isSelectAllState, selectAll } from "../app/Redux/Slices/CartSlice"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { Checkbox } from "@mui/material"
 
 export default function AllCartSelected() {
   const isSelectAll = useAppSelector(isSelectAllState)
   const dispatch = useAppDispatch()
 
   return (
-    <Form.Check
-      checked={isSelectAll}
-      className="z-0"
-      id="header-checkbox"
-      type="checkbox"
+    <Checkbox
       onChange={() => {
         dispatch(selectAll())
       }}
+      id="header-checkbox"
+      checked={isSelectAll}
     />
   )
 }

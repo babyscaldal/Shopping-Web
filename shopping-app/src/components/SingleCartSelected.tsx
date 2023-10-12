@@ -1,4 +1,3 @@
-import { Form } from "react-bootstrap"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { useEffect, useState } from "react"
 import { ICartList } from "./CartTable"
@@ -7,6 +6,7 @@ import {
   removeFromSelectedList,
   selectedCartListState,
 } from "../app/Redux/Slices/CartSlice"
+import { Checkbox } from "@mui/material"
 
 interface ISingleCartSelected {
   name: string
@@ -45,23 +45,12 @@ export default function SingleCartSelected({
   }, [isSelectSingle])
 
   return (
-    <Form.Check
+    <Checkbox
       onChange={() => {
         handleChange()
-        // if (!isSelected) {
-        //   onChange([...value, item])
-        // } else if (isSelected) {
-        //   onChange(
-        //     value.filter(
-        //       (selected: ICartList) => selected.id !== item.id,
-        //     ),
-        //   )
-        // }
       }}
+      id="header-checkbox-single"
       checked={isSelectSingle}
-      className="z-0"
-      id="header-checkbox"
-      type="checkbox"
     />
   )
 }

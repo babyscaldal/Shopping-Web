@@ -9,6 +9,7 @@ import CompareIcon from "@mui/icons-material/Compare"
 import PersonIcon from "@mui/icons-material/Person"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
+import { AppBar } from "@mui/material"
 
 const HeaderUpperContainer = styled.div`
   background: var(--color-131921);
@@ -74,157 +75,153 @@ const DropdownItem = styled(Dropdown.Item)`
 
 export default function Header() {
   return (
-    <nav className="position-relative">
-      <div className="position-fixed z-2 w-100 top-0 ">
-        <HeaderUpperContainer className="py-3">
-          <Container fluid="xxl">
-            <Row className="align-items-center justify-content-around">
-              <Col xs={2}>
-                <h2 className="m-0">
-                  <NavLink className="text-white" to="/">
-                    STORAGE
+    <AppBar position="fixed" sx={{ boxShadow: "none" }}>
+      <HeaderUpperContainer className="py-3">
+        <Container fluid="xxl">
+          <Row className="align-items-center justify-content-around">
+            <Col xs={2}>
+              <h2 className="m-0">
+                <NavLink className="text-white" to="/">
+                  STORAGE
+                </NavLink>
+              </h2>
+            </Col>
+            <Col xs={8}>
+              <div className="header-upper-links d-flex align-items-center justify-content-end gap-30">
+                <div>
+                  <NavLink
+                    style={({ isActive, isPending }) => {
+                      return {
+                        fontSize: "18px",
+                        color: isActive
+                          ? "var(--color-febd69)"
+                          : "var(--color-ededed)",
+                      }
+                    }}
+                    to="compare"
+                    className="d-flex align-items-center gap-10"
+                  >
+                    <CompareIcon />
+                    <p className="mb-0">Compare</p>
                   </NavLink>
-                </h2>
-              </Col>
-              <Col xs={8}>
-                <div className="header-upper-links d-flex align-items-center justify-content-end gap-30">
-                  <div>
-                    <NavLink
-                      style={({ isActive, isPending }) => {
-                        return {
-                          fontSize: "18px",
-                          color: isActive
-                            ? "var(--color-febd69)"
-                            : "var(--color-ededed)",
-                        }
+                </div>
+                <div>
+                  <NavLink
+                    style={({ isActive, isPending }) => {
+                      return {
+                        fontSize: "18px",
+                        color: isActive
+                          ? "var(--color-febd69)"
+                          : "var(--color-ededed)",
+                      }
+                    }}
+                    to="wishlist"
+                    className="d-flex align-items-center gap-10"
+                  >
+                    <Badge
+                      badgeContent={50}
+                      color="warning"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
                       }}
-                      to="compare"
-                      className="d-flex align-items-center gap-10"
                     >
-                      <CompareIcon />
-                      <p className="mb-0">Compare</p>
-                    </NavLink>
-                  </div>
-                  <div>
-                    <NavLink
-                      style={({ isActive, isPending }) => {
-                        return {
-                          fontSize: "18px",
-                          color: isActive
-                            ? "var(--color-febd69)"
-                            : "var(--color-ededed)",
-                        }
-                      }}
-                      to="wishlist"
-                      className="d-flex align-items-center gap-10"
-                    >
-                      <Badge
-                        badgeContent={50}
-                        color="warning"
-                        anchorOrigin={{
-                          vertical: "top",
-                          horizontal: "right",
+                      <FavoriteIcon />
+                    </Badge>
+                    <p className="mb-0">Favorite</p>
+                  </NavLink>
+                </div>
+                <div>
+                  <NavLink
+                    style={({ isActive, isPending }) => {
+                      return {
+                        fontSize: "18px",
+                        color: isActive
+                          ? "var(--color-febd69)"
+                          : "var(--color-ededed)",
+                      }
+                    }}
+                    to="login"
+                    className="d-flex align-items-center gap-10"
+                  >
+                    <PersonIcon />
+                    <p className="mb-0">Login</p>
+                  </NavLink>
+                </div>
+                <div>
+                  <NavLink
+                    style={({ isActive, isPending }) => {
+                      return {
+                        fontSize: isActive ? "16px" : "14px",
+                        fontWeight: isActive ? "bolder" : "",
+                        color: isActive
+                          ? "var(--color-febd69)"
+                          : "var(--color-ededed)",
+                      }
+                    }}
+                    to="cart"
+                    className="d-flex align-items-center gap-10"
+                  >
+                    <Badge badgeContent={50} color="warning">
+                      <ShoppingCartOutlinedIcon />
+                    </Badge>
+                  </NavLink>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </HeaderUpperContainer>
+      <HeaderBottomContainer className="py-3">
+        <Container fluid="xxl">
+          <Row className="align-items-center">
+            <Col xs={12}>
+              <MenuBottom className="d-flex align-items-center gap-30 justify-content-between">
+                <Dropdown>
+                  <DropdownToggle
+                    className="bg-transparent border-0 gap-15 d-flex align-items-center"
+                    variant="success"
+                    id="dropdown-basic"
+                    size="lg"
+                  >
+                    <img src={images.menu} alt="menu" />
+                    <span className="me-5 d-inline-block">Shop categories</span>
+                  </DropdownToggle>
+
+                  <DropdownMenu>
+                    <DropdownItem>Action</DropdownItem>
+                    <DropdownItem>Action</DropdownItem>
+                    <DropdownItem>Action</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+                <MenuLink className="">
+                  <div className="d-flex align-items-center gap-15">
+                    {navOption.map((link, index) => (
+                      <StyledNavLink
+                        key={index}
+                        to={link.to}
+                        style={({ isActive, isPending }) => {
+                          return {
+                            fontSize: "16px",
+                            color: isActive
+                              ? "var(--color-febd69)"
+                              : "var(--color-ededed)",
+                          }
                         }}
                       >
-                        <FavoriteIcon />
-                      </Badge>
-                      <p className="mb-0">Favorite</p>
-                    </NavLink>
+                        {link.title}
+                      </StyledNavLink>
+                    ))}
                   </div>
-                  <div>
-                    <NavLink
-                      style={({ isActive, isPending }) => {
-                        return {
-                          fontSize: "18px",
-                          color: isActive
-                            ? "var(--color-febd69)"
-                            : "var(--color-ededed)",
-                        }
-                      }}
-                      to="login"
-                      className="d-flex align-items-center gap-10"
-                    >
-                      <PersonIcon />
-                      <p className="mb-0">Login</p>
-                    </NavLink>
-                  </div>
-                  <div>
-                    <NavLink
-                      style={({ isActive, isPending }) => {
-                        return {
-                          fontSize: isActive ? "16px" : "14px",
-                          fontWeight: isActive ? "bolder" : "",
-                          color: isActive
-                            ? "var(--color-febd69)"
-                            : "var(--color-ededed)",
-                        }
-                      }}
-                      to="cart"
-                      className="d-flex align-items-center gap-10"
-                    >
-                      <Badge badgeContent={50} color="warning">
-                        <ShoppingCartOutlinedIcon />
-                      </Badge>
-                    </NavLink>
-                  </div>
+                </MenuLink>
+                <div style={{ flexGrow: 1 }}>
+                  <SearchBarForm />
                 </div>
-              </Col>
-            </Row>
-          </Container>
-        </HeaderUpperContainer>
-        <HeaderBottomContainer className="py-3">
-          <Container fluid="xxl">
-            <Row className="align-items-center">
-              <Col xs={12}>
-                <MenuBottom className="d-flex align-items-center gap-30 justify-content-between">
-                  <Dropdown>
-                    <DropdownToggle
-                      className="bg-transparent border-0 gap-15 d-flex align-items-center"
-                      variant="success"
-                      id="dropdown-basic"
-                      size="lg"
-                    >
-                      <img src={images.menu} alt="menu" />
-                      <span className="me-5 d-inline-block">
-                        Shop categories
-                      </span>
-                    </DropdownToggle>
-
-                    <DropdownMenu>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Action</DropdownItem>
-                      <DropdownItem>Action</DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
-                  <MenuLink className="">
-                    <div className="d-flex align-items-center gap-15">
-                      {navOption.map((link, index) => (
-                        <StyledNavLink
-                          key={index}
-                          to={link.to}
-                          style={({ isActive, isPending }) => {
-                            return {
-                              fontSize: "16px",
-                              color: isActive
-                                ? "var(--color-febd69)"
-                                : "var(--color-ededed)",
-                            }
-                          }}
-                        >
-                          {link.title}
-                        </StyledNavLink>
-                      ))}
-                    </div>
-                  </MenuLink>
-                  <div style={{ flexGrow: 1 }}>
-                    <SearchBarForm />
-                  </div>
-                </MenuBottom>
-              </Col>
-            </Row>
-          </Container>
-        </HeaderBottomContainer>
-      </div>
-    </nav>
+              </MenuBottom>
+            </Col>
+          </Row>
+        </Container>
+      </HeaderBottomContainer>
+    </AppBar>
   )
 }

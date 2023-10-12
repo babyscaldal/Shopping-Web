@@ -76,19 +76,19 @@ export default function Footer() {
             <Col xs={3}>
               <h4 className="text-white my-4">Infomation</h4>
               <FooterLinks className="d-flex flex-column ">
-                <Link className="text-white py-2 mb-1" to="">
+                <Link to="/privacy-policy" className="text-white py-2 mb-1">
                   Privacy Policy
                 </Link>
-                <Link className="text-white py-2 mb-1" to="">
+                <Link to="/refund-policy" className="text-white py-2 mb-1">
                   Refund Policy
                 </Link>
-                <Link className="text-white py-2 mb-1" to="">
+                <Link to="/shipping-policy" className="text-white py-2 mb-1">
                   Shipping Policy
                 </Link>
-                <Link className="text-white py-2 mb-1" to="">
+                <Link to="/term-condition" className="text-white py-2 mb-1">
                   Term & Condition
                 </Link>
-                <Link className="text-white py-2 mb-1" to="">
+                <Link to="/blogs" className="text-white py-2 mb-1">
                   Blogs
                 </Link>
               </FooterLinks>

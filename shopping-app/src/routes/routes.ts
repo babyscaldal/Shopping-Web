@@ -18,6 +18,9 @@ import SingleBlog from "../components/SingleBlog"
 import PrivacyPolicy from "../pages/PrivatePolicy"
 import TermAndCondition from "../pages/TermAndCondition"
 import RefundPolicty from "../pages/RefundPolicy"
+import ShippingPolicy from "../pages/ShippingPolicty"
+import ProductDetail from "../pages/ProductDetail"
+import Checkout from "../pages/CheckOut"
 
 const publicRoutes = [
   {
@@ -39,10 +42,16 @@ const publicRoutes = [
         isIndex: false,
       },
       {
-        path: "store",
+        path: "product",
         element: OurStore,
         isIndex: false,
       },
+      {
+        path: "product/:id",
+        element: ProductDetail,
+        isIndex: false,
+      },
+
       {
         path: "blogs",
         element: Blog,
@@ -99,8 +108,18 @@ const publicRoutes = [
         isIndex: false,
       },
       {
+        path: "shipping-policy",
+        element: ShippingPolicy,
+        isIndex: false,
+      },
+      {
         path: "term-condition",
         element: TermAndCondition,
+        isIndex: false,
+      },
+      {
+        path: "checkout",
+        element: Checkout,
         isIndex: false,
       },
     ],

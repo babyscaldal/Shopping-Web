@@ -1,5 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
+import useTitle from "../hooks/useTitle"
 
 const Wrapper = styled.section`
   padding-top: 160px;
@@ -12,6 +13,8 @@ const Policy = styled.div`
 `
 
 const TermAndCondition = () => {
+  useTitle("Term And Conditions")
+
   return (
     <Wrapper>
       <Container fluid="xxl" className="policy-wrapper py-5 home-wrapper-2">

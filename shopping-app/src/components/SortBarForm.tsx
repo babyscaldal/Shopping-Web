@@ -18,7 +18,7 @@ export default function SortBarForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomSelectField name={"sort"}>
+        <CustomSelectField width="250px" name={"sort"}>
           {selectFilterData.map((item, index) => (
             <MenuItem key={index} value={item.value}>
               {item.label}

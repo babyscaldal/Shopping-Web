@@ -26,6 +26,7 @@ export default function CustomTextAreaField({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => {
+        console.log(value)
         return (
           <FormControl
             fullWidth
@@ -49,11 +50,6 @@ export default function CustomTextAreaField({
               rows={rows}
               placeholder={placeholder}
             />
-            {/* {error ? (
-              <Alert sx={{ mt: "5px" }} severity="error">
-                {error?.message}
-              </Alert>
-            ) : null} */}
           </FormControl>
         )
       }}

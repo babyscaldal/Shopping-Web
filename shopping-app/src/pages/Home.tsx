@@ -20,6 +20,7 @@ import ProductCard from "../components/ProductCard"
 import SpecialProduct from "../components/SpecialProduct"
 import FamousProductItem from "../components/FamousProductItem"
 import useTitle from "../hooks/useTitle"
+import PopularList from "../components/PopularList"
 
 const FirstHomeWrapper = styled.section`
   background-color: var(--color-f5f5f7);
@@ -145,11 +146,6 @@ const BlogWrapper = styled.section`
 const ProductWrapper = styled.section`
   background-color: var(--color-f5f5f7);
 `
-
-const PopularWrapper = styled.section`
-  background-color: var(--color-f5f5f7);
-`
-
 const Heading = styled.h3`
   font-size: 26px;
   line-height: 32px;
@@ -293,20 +289,7 @@ export default function Home() {
           </Row>
         </Container>
       </SpecialProductsWrapper>
-      <PopularWrapper className="py-5">
-        <Container fluid="xxl">
-          <Row>
-            <Col xs={12}>
-              <Heading>Our Popular Products</Heading>
-            </Col>
-            {productList.map((product, index) => (
-              <Col key={index} xs={3}>
-                <ProductCard product={product} />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </PopularWrapper>
+      <PopularList />
       <MarqueeWrapper className="py-5">
         <Container fluid="xxl">
           <Row>
