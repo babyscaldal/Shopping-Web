@@ -56,7 +56,7 @@ export default function ContactForm() {
             label="Tel"
             id="contact-form-tel"
             name={"tel"}
-            type="text"
+            type="tel"
           />
           <CustomTextAreaField
             placeholder="Comments"

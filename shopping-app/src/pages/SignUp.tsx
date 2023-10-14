@@ -12,7 +12,8 @@ const AuthCard = styled.div`
   padding: 20px;
   background-color: white;
   width: 500px;
-  margin: 30px auto;
+  margin: auto;
+  margin-bottom: 10px;
   border-radius: 10px;
 
   h3 {
@@ -28,10 +29,10 @@ const AuthCard = styled.div`
 `
 
 export default function SignUp() {
-  useTitle("Login")
+  useTitle("Sign Up")
   return (
     <Wrapper>
-      <Container fluid="xxl" className="home-wrapper-2">
+      <Container fluid="xxl">
         <Row>
           <Col xs={12}>
             <AuthCard>

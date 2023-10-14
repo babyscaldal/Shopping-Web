@@ -1,4 +1,4 @@
-import { isSelectAllState, selectAll } from "../app/Redux/Slices/CartSlice"
+import { isSelectAllState, selectAll } from "../app/Redux/cart/CartSlice"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { Checkbox } from "@mui/material"
 

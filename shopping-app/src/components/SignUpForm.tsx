@@ -5,11 +5,26 @@ import { Button } from "@mui/material"
 import { NavLink, useNavigate } from "react-router-dom"
 import CustomTextField from "./CustomTextField"
 import PasswordField from "./PasswordField"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import {
+  registerUser,
+  saveUserToClient,
+  usersSaved,
+} from "../app/Redux/users/userSlice"
+
+export interface IRegisterFormValue {
+  email: string
+  password: string
+  username: string
+  confirmPassword: string
+}
+
+export type IRegisterInfoData = Omit<IRegisterFormValue, "confirmPassword">
 
 export const signUpValueSchema = z
   .object({
     email: z.string().email().min(1, { message: "Email is required" }),
-    username: z.string().min(1, { message: "Username is required" }),
+    username: z.string().min(1, { message: "User name is required" }),
     password: z
       .string()
       .min(8, { message: "The password must be least 8 characters long." }),
@@ -24,11 +39,12 @@ export const signUpValueSchema = z
 
 export default function SignUpForm() {
   const navigate = useNavigate()
-  const form = useForm({
+  const dispatch = useAppDispatch()
+  const form = useForm<IRegisterFormValue>({
     defaultValues: {
       email: "",
-      password: "",
       username: "",
+      password: "",
       confirmPassword: "",
     },
     resolver: zodResolver(signUpValueSchema),
@@ -37,10 +53,18 @@ export default function SignUpForm() {
 
   const { handleSubmit, reset } = form
 
-  const onSubmit = (data: any) => {
-    console.log(data)
+  const onSubmit = (data: IRegisterFormValue) => {
+    const { confirmPassword, ...others } = data
+    const registerInfoData: IRegisterInfoData = { ...others }
+    const registerRequestData = { user: { ...registerInfoData } }
+    dispatch(registerUser(registerRequestData))
+    dispatch(saveUserToClient(registerInfoData))
     reset()
   }
+
+  const usersClient = useAppSelector(usersSaved)
+
+  console.log(usersClient)
 
   return (
     <FormProvider {...form}>
@@ -49,16 +73,16 @@ export default function SignUpForm() {
         className="d-flex flex-column gap-15"
       >
         <CustomTextField
-          label="Username"
-          placeholder="Username"
+          label="User Name"
+          placeholder="User Name"
           type="text"
-          id={"signUp-username"}
+          id={"signUp-userName"}
           name="username"
         />
         <CustomTextField
           label="Email"
           placeholder="Email"
-          type="text"
+          type="email"
           id={"signUp-email"}
           name="email"
         />

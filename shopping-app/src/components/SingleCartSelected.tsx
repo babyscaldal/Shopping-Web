@@ -4,7 +4,7 @@ import { ICartList } from "./CartTable"
 import {
   addToSelectedList,
   removeFromSelectedList,
-} from "../app/Redux/Slices/CartSlice"
+} from "../app/Redux/cart/CartSlice"
 import { Checkbox } from "@mui/material"
 
 interface ISingleCartSelected {

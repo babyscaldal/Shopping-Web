@@ -1,13 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useTitle from "../hooks/useTitle"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
 import { Pagination, Rating } from "@mui/material"
 import ProductCard from "../components/ProductCard"
-import { productList } from "../data/data"
 import ToggleGrid from "../components/ToggleGrid"
 import FilterSideBarForm from "../components/FilterSideBarForm"
 import SortBarForm from "../components/SortBarForm"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { getProducts } from "../app/Redux/products/productSlice"
 
 export const FilterCard = styled.div`
   background-color: white;
@@ -78,9 +79,15 @@ export default function OurStore() {
   useTitle("Our Store")
   const [grid, setGrid] = useState<number>(3)
 
+  const dispatch = useAppDispatch()
+  const allProducts = useAppSelector((state) => state?.product?.product)
+
   const handleChange = (value: number) => {
     setGrid(value)
   }
+  useEffect(() => {
+    dispatch(getProducts())
+  }, [])
 
   return (
     <>
@@ -135,14 +142,7 @@ export default function OurStore() {
                       <h5>
                         Kids headphones bulk 10 pack multi colored for students
                       </h5>
-                      <Rating
-                        size="small"
-                        name="simple-controlled"
-                        value={5}
-                        // onChange={(event, newValue) => {
-                        //   setValue(newValue)
-                        // }}
-                      />
+                      <Rating size="small" name="simple-controlled" value={5} />
 
                       <b>$ 300</b>
                     </div>
@@ -159,14 +159,7 @@ export default function OurStore() {
                       <h5>
                         Kids headphones bulk 10 pack multi colored for students
                       </h5>
-                      <Rating
-                        size="small"
-                        name="simple-controlled"
-                        value={5}
-                        // onChange={(event, newValue) => {
-                        //   setValue(newValue)
-                        // }}
-                      />
+                      <Rating size="small" name="simple-controlled" value={5} />
                       <b>$ 300</b>
                     </div>
                   </RandomProducts>
@@ -183,14 +176,16 @@ export default function OurStore() {
                     <SortBarForm />
                   </div>
                   <div className="d-flex align-items-center gap-10">
-                    <p className="totalproducts mb-0">21 Products</p>
+                    <p className="totalproducts mb-0">
+                      {allProducts?.length} products
+                    </p>
                     <ToggleGrid grid={grid} onChange={handleChange} />
                   </div>
                 </div>
               </FilterSortGrid>
               <div className="products-list pb-5">
                 <Row className="g-3">
-                  {productList.map((product, index) => (
+                  {allProducts?.map((product, index) => (
                     <Col
                       key={index}
                       xs={grid ? grid : 12}

@@ -5,17 +5,25 @@ import { Button } from "@mui/material"
 import { NavLink, useNavigate } from "react-router-dom"
 import PasswordField from "./PasswordField"
 import EmailField from "./CustomTextField"
+import { useAppDispatch } from "../app/hooks"
+import { loginUser } from "../app/Redux/users/userSlice"
+
+export type ILoginFormValue = {
+  email: string
+  password: string
+}
 
 export const loginValueSchema = z.object({
-  emailLogin: z.string().email().min(1, { message: "Email is required" }),
-  passwordLogin: z
+  email: z.string().email().min(1, { message: "Email is required" }),
+  password: z
     .string()
     .min(8, { message: "The password must be least 8 characters long." }),
 })
 
 export default function LoginForm() {
-  const form = useForm({
-    defaultValues: { emailLogin: "", passwordLogin: "" },
+  const dispatch = useAppDispatch()
+  const form = useForm<ILoginFormValue>({
+    defaultValues: { email: "", password: "" },
     resolver: zodResolver(loginValueSchema),
     mode: "onSubmit",
   })
@@ -23,8 +31,11 @@ export default function LoginForm() {
   const navigate = useNavigate()
   const { handleSubmit, reset } = form
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: ILoginFormValue) => {
     console.log(data)
+    const loginInfoData = { ...data }
+    const loginRequestData = { user: { ...loginInfoData } }
+    dispatch(loginUser(loginRequestData))
     reset()
   }
 
@@ -39,13 +50,13 @@ export default function LoginForm() {
           placeholder="Email"
           id={"login-email"}
           type="Email"
-          name="emailLogin"
+          name="email"
         />
         <PasswordField
           label="Password"
           placeholder="Password"
           id="login-password"
-          name="passwordLogin"
+          name="password"
         />
         <div className="d-flex justify-content-between align-items-center">
           <NavLink
