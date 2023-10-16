@@ -22,6 +22,8 @@ import ProductDetail from "../pages/ProductDetail"
 import Checkout from "../pages/CheckOut"
 import Favorite from "@mui/icons-material/Favorite"
 import FavoriteList from "../pages/FavoriteList"
+import ProductsList from "../components/ProductsList"
+import CategoriesList from "../components/CatogoriesList"
 
 const publicRoutes = [
   {
@@ -43,16 +45,10 @@ const publicRoutes = [
         isIndex: false,
       },
       {
-        path: "product",
-        element: OurStore,
-        isIndex: false,
-      },
-      {
-        path: "product/:id",
+        path: "product/:category/:id",
         element: ProductDetail,
         isIndex: false,
       },
-
       {
         path: "blogs",
         element: Blog,

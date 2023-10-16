@@ -19,7 +19,7 @@ export const CartItem = ({ item }: ICartItem) => {
       }}
     >
       <TableCell align="center">
-        <SingleCartSelected item={item} name="selectedList" />
+        <SingleCartSelected item={item} />
       </TableCell>
       <TableCell align="center">
         <Image

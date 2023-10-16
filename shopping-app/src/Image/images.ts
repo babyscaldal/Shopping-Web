@@ -46,8 +46,16 @@ import famous2 from "/images/famous-2.webp"
 import famous3 from "/images/famous-3.webp"
 import famous4 from "/images/famous-4.webp"
 import cross from "/images/cross.svg"
+import menClothing from "/CategoryImage/menClothing.png"
+import womenClothing from "/CategoryImage/womenClothing.jpg"
+import electronics from "/CategoryImage/electronics.avif"
+import jewelry from "/CategoryImage/jewellery.jpg"
 
 const images = {
+  jewelry,
+  electronics,
+  womenClothing,
+  menClothing,
   cross,
   famous1,
   famous2,

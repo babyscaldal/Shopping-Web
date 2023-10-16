@@ -1,6 +1,18 @@
 import styled from "styled-components"
-import { ICategory } from "../data/data"
+import { ICategory, featureImages } from "../data/data"
 import Image from "./Image"
+import { IProductResponse } from "../app/Redux/products/productType"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import {
+  allProductsState,
+  electronicsState,
+  getProductsInCategory,
+  jewelryState,
+  menClothingState,
+  womenClothingState,
+} from "../app/Redux/products/productSlice"
+import toCapitalize from "../utils/toCapitalize"
+import { useNavigate } from "react-router-dom"
 
 const Wrapper = styled.div`
   border: 1px solid var(--color-ededed);
@@ -17,18 +29,41 @@ const Wrapper = styled.div`
 `
 
 interface ICategoryItem {
-  category: ICategory
+  item: string
+  quantity: number
+  index: number
 }
 
-export default function CategoryItem({ category }: ICategoryItem) {
-  const { image, product, quantity } = category
+export default function CategoryItem({ item, quantity, index }: ICategoryItem) {
+  const allProducts = useAppSelector(allProductsState)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+
   return (
-    <Wrapper className="d-flex gap-30 align-items-center justify-content-between">
+    <Wrapper
+      onClick={() => {
+        dispatch(getProductsInCategory(item))
+        navigate(`/product/${item}`)
+      }}
+      className="d-flex gap-30 align-items-center justify-content-between"
+    >
       <div>
-        <h6>{product}</h6>
+        <h6>{toCapitalize(item)}</h6>
         <p>{quantity} Items</p>
       </div>
-      <Image src={image} alt={product} height="100px" width="100px" />
+      {featureImages.map((item, imageIndex) => {
+        if (imageIndex === index) {
+          return (
+            <Image
+              key={imageIndex}
+              src={item}
+              alt={item}
+              height="100px"
+              width="100px"
+            />
+          )
+        }
+      })}
     </Wrapper>
   )
 }

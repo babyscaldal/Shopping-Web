@@ -1,9 +1,20 @@
 import axios from "axios"
 import queryString from "query-string"
+import {
+  ILoginResponseData,
+  IRegisterResponseData,
+} from "./Redux/users/userType"
+
+const getTokenFromLocalStorage: string | null = localStorage.getItem("customer")
+
+const token: ILoginResponseData | IRegisterResponseData =
+  getTokenFromLocalStorage ? JSON.parse(getTokenFromLocalStorage) : null
 
 const axiosClient = axios.create({
   headers: {
-    "content-type": "application/json",
+    Authorization: `Bearer ${token ? token.user.token : ""}`,
+    // "content-type": "application/json",
+    Accept: "application/json",
   },
   paramsSerializer: (params) => queryString.stringify(params),
 })
@@ -25,7 +36,7 @@ axiosClient.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    localStorage.setItem("token", JSON.stringify(response.data?.user?.token))
+    // localStorage.setItem("token", JSON.stringify(response.data?.user?.token))
     return response
   },
   function (error) {

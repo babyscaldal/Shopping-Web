@@ -105,14 +105,6 @@ const DescriptionWrapper = styled.div`
 `
 
 function ProductDetail() {
-  const props = {
-    width: 594,
-    height: 600,
-    zoomWidth: 600,
-
-    img: "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
-  }
-
   const [orderedProduct] = useState(true)
 
   const closeModal = () => {}
@@ -133,14 +125,7 @@ function ProductDetail() {
               <div className="border-bottom py-3">
                 <Price className="price">$ 100</Price>
                 <div className="d-flex align-items-center gap-10">
-                  <Rating
-                    size="small"
-                    name="simple-controlled"
-                    value={5}
-                    // onChange={(event, newValue) => {
-                    //   setValue(newValue)
-                    // }}
-                  />
+                  <Rating size="small" name="simple-controlled" value={5} />
 
                   <p className="mb-0 t-review">( 2 Reviews )</p>
                 </div>

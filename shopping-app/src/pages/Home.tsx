@@ -6,7 +6,6 @@ import ServiceItem from "../components/ServiceItem"
 import {
   blogList,
   brandList,
-  categories,
   famousList,
   productList,
   smallerCart,
@@ -16,11 +15,19 @@ import CategoryItem from "../components/CaregoryItem"
 import Marquee from "react-fast-marquee"
 import Image from "../components/Image"
 import BlogCard from "../components/BlogCard"
-import ProductCard from "../components/ProductCard"
 import SpecialProduct from "../components/SpecialProduct"
 import FamousProductItem from "../components/FamousProductItem"
 import useTitle from "../hooks/useTitle"
 import PopularList from "../components/PopularList"
+import { useAppSelector } from "../app/hooks"
+import {
+  electronicsState,
+  jewelryState,
+  menClothingState,
+  womenClothingState,
+} from "../app/Redux/products/productSlice"
+import { categories } from "../app/Redux/Categories/CategorySlice"
+import { IProductResponse } from "../app/Redux/products/productType"
 
 const FirstHomeWrapper = styled.section`
   background-color: var(--color-f5f5f7);
@@ -160,6 +167,30 @@ const AllWrapper = styled.section`
 
 export default function Home() {
   useTitle("Storage")
+
+  const allCategories = useAppSelector(categories)
+
+  const menClothingProducts = useAppSelector(menClothingState)
+  // const menClothingPopularProduct = menClothingProducts?.toSorted(
+  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
+  // )
+
+  console.log(menClothingProducts)
+
+  const womenClothingProducts = useAppSelector(womenClothingState)
+  // const womenClothingPopularProduct = womenClothingProducts?.toSorted(
+  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
+  // )
+
+  const electronicsProducts = useAppSelector(electronicsState)
+  // const electronicsPopularProduct = electronicsProducts?.toSorted(
+  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
+  // )
+
+  const jewelryProducts = useAppSelector(jewelryState)
+  // const jewelryPopularProduct = jewelryProducts?.toSorted(
+  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
+  // )
   return (
     <AllWrapper>
       <FirstHomeWrapper className="pt-3 pb-5">
@@ -236,25 +267,31 @@ export default function Home() {
                 <Col xs={12}>
                   <Heading>Categories List</Heading>
                 </Col>
-                {categories.map((category, index) => (
-                  <Col key={index} xs={3}>
-                    <CategoryItem category={category} />
-                  </Col>
-                ))}
+                {allCategories.map((item, index) => {
+                  return (
+                    <Col key={item} xs={3}>
+                      <CategoryItem
+                        quantity={menClothingProducts?.length}
+                        item={item}
+                        index={index}
+                      />
+                    </Col>
+                  )
+                })}
               </Row>
             </Categories>
           </Container>
         </div>
       </CategoriesWrapper>
       <ProductWrapper className="py-5">
-        <Container fluid="xxl">
+        <Container fluid="xl">
           <Row className="g-3">
             <Col xs={12}>
               <Heading>Featured Collection</Heading>
             </Col>
             {productList.map((product, index) => (
               <Col key={index} xs={3}>
-                <ProductCard product={product} />
+                {/* <ProductCard product={product} /> */}
               </Col>
             ))}
           </Row>

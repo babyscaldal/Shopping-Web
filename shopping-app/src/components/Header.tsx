@@ -10,6 +10,8 @@ import PersonIcon from "@mui/icons-material/Person"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { AppBar } from "@mui/material"
+import UserLoggedInMenu from "./UserLoggedInMenu"
+import { useState } from "react"
 
 const HeaderUpperContainer = styled.div`
   background: var(--color-131921);
@@ -74,6 +76,7 @@ const DropdownItem = styled(Dropdown.Item)`
 `
 
 export default function Header() {
+  const [isLogin] = useState(true)
   return (
     <AppBar position="fixed" sx={{ boxShadow: "none" }}>
       <HeaderUpperContainer className="py-3">
@@ -131,6 +134,7 @@ export default function Header() {
                     <p className="mb-0">Favorite</p>
                   </NavLink>
                 </div>
+                {/* {isLogin && ( */}
                 <div>
                   <NavLink
                     style={({ isActive }) => {
@@ -148,6 +152,7 @@ export default function Header() {
                     <p className="mb-0">Login</p>
                   </NavLink>
                 </div>
+                {/* )} */}
                 <div>
                   <NavLink
                     style={({ isActive }) => {
@@ -167,6 +172,11 @@ export default function Header() {
                     </Badge>
                   </NavLink>
                 </div>
+                {/* {!isLogin && ( */}
+                <div>
+                  <UserLoggedInMenu />
+                </div>
+                {/* )} */}
               </div>
             </Col>
           </Row>

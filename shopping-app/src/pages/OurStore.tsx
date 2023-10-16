@@ -2,18 +2,29 @@ import { useEffect, useState } from "react"
 import useTitle from "../hooks/useTitle"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import { Pagination, Rating } from "@mui/material"
-import ProductCard from "../components/ProductCard"
+import { Pagination } from "@mui/material"
 import ToggleGrid from "../components/ToggleGrid"
 import FilterSideBarForm from "../components/FilterSideBarForm"
 import SortBarForm from "../components/SortBarForm"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
-import { getProducts } from "../app/Redux/products/productSlice"
+import {
+  changeProductsPerPage,
+  getProducts,
+  getProductsInCategory,
+  renderProductsState,
+} from "../app/Redux/products/productSlice"
+import { NavLink, Outlet } from "react-router-dom"
+import {
+  categories,
+  getAllCategories,
+} from "../app/Redux/Categories/CategorySlice"
+import toCapitalize from "../utils/toCapitalize"
+import RandomProducts from "../components/RandomProducts"
 
 export const FilterCard = styled.div`
   background-color: white;
   border-radius: 10px;
-  padding: 15px 15px 25px;
+  padding: 15px 25px 15px 25px;
   box-shadow: 0 0 10px #0000001a;
 
   ul,
@@ -41,7 +52,16 @@ export const FilterTitle = styled.div`
   line-height: 20px;
   font-weight: 600;
   color: var(--color-1c1c1b);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+`
+
+const CategoryList = styled.div`
+  list-style-type: none;
+  a {
+    font-size: 13px;
+    line-height: 30px;
+    color: var(--color-777777);
+  }
 `
 
 export const SubTitle = styled.div`
@@ -59,146 +79,143 @@ const FilterSortGrid = styled.div`
   box-shadow: 0 0 10px #0000001a;
 `
 
-const RandomProducts = styled.div`
-  h5 {
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-
-  &:first-child {
-    border-bottom: 1px solid var(--color-ededed);
-  }
-`
-
 const Wrapper = styled.div`
   background-color: var(--color-f5f5f7);
-  padding-top: 160px;
+  padding-top: 150px;
 `
 
-export default function OurStore() {
+const GridSystem = styled.div`
+  display: grid;
+`
+interface IOutStore {
+  currentPage: number
+  onPageChange: (event: any, page: number) => void
+  onCategoryChange: () => void
+}
+export default function OurStore({
+  currentPage,
+  onPageChange,
+  onCategoryChange,
+}: IOutStore) {
   useTitle("Our Store")
   const [grid, setGrid] = useState<number>(3)
+  const renderProducts = useAppSelector(renderProductsState)
 
   const dispatch = useAppDispatch()
-  const allProducts = useAppSelector((state) => state?.product?.product)
+
+  const allCategories = useAppSelector(categories)
 
   const handleChange = (value: number) => {
     setGrid(value)
   }
-  useEffect(() => {
-    dispatch(getProducts())
-  }, [])
+
+  const pageNumber = Math.ceil(renderProducts?.length / 9)
 
   return (
     <>
       <Wrapper>
-        <Container className="py-3">
+        <Container fluid="xxl" className="py-3">
           <Row>
-            <Col xs={3}>
-              <FilterCard className="mb-3">
-                <FilterTitle>Shop By Categories</FilterTitle>
-                <div>
-                  <ul className="ps-0">
-                    <li>Watch</li>
-                    <li>Tv</li>
-                    <li>Camera</li>
-                    <li>Laptop</li>
-                  </ul>
-                </div>
-              </FilterCard>
-              <FilterCard className="mb-3">
-                <FilterTitle>Filter By</FilterTitle>
-                <FilterSideBarForm />
-              </FilterCard>
-              <FilterCard className="mb-3">
-                <FilterTitle>Product Tags</FilterTitle>
-                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Headphone
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Laptop
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Mobile
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Wire
-                  </span>
-                </div>
-              </FilterCard>
-              <FilterCard className="mb-3">
-                <FilterTitle>Random Product</FilterTitle>
-                <div>
-                  <RandomProducts className="mb-3 d-flex">
-                    <div className="w-50">
-                      <img
-                        src="images/watch.jpg"
-                        className="img-fluid"
-                        alt="watch"
-                      />
+            <Col xs={3} style={{ minWidth: "200px", height: "100%" }}>
+              <Row className="g-4">
+                <Col xs={12}>
+                  <FilterCard>
+                    <FilterTitle>Categories</FilterTitle>
+                    <CategoryList>
+                      <li>
+                        <NavLink
+                          onClick={() => {
+                            dispatch(getProducts())
+                            onCategoryChange()
+                          }}
+                          style={({ isActive }) => {
+                            return {
+                              color: isActive ? "blue" : "",
+                            }
+                          }}
+                          to={`/product/all`}
+                        >
+                          All Products
+                        </NavLink>
+                      </li>
+                      {allCategories?.map((category, index) => (
+                        <li key={`${index} - category`}>
+                          <NavLink
+                            onClick={() => {
+                              dispatch(getProductsInCategory(category))
+                              onCategoryChange()
+                            }}
+                            style={({ isActive }) => {
+                              return {
+                                color: isActive ? "blue" : "",
+                              }
+                            }}
+                            to={`/product/${category}`}
+                          >
+                            {toCapitalize(category)}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </CategoryList>
+                  </FilterCard>
+                </Col>
+                <Col xs={12}>
+                  <FilterCard>
+                    <FilterTitle>Filter By</FilterTitle>
+                    <FilterSideBarForm />
+                  </FilterCard>
+                </Col>
+                <Col xs={12}>
+                  <FilterCard>
+                    <FilterTitle>Product Tags</FilterTitle>
+                    <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                      {allCategories?.map((category, index) => (
+                        <span
+                          key={`${index} - ${category}`}
+                          className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                        >
+                          {toCapitalize(category)}
+                        </span>
+                      ))}
                     </div>
-                    <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <Rating size="small" name="simple-controlled" value={5} />
-
-                      <b>$ 300</b>
-                    </div>
-                  </RandomProducts>
-                  <RandomProducts className="d-flex">
-                    <div className="w-50">
-                      <img
-                        src="images/watch.jpg"
-                        className="img-fluid"
-                        alt="watch"
-                      />
-                    </div>
-                    <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <Rating size="small" name="simple-controlled" value={5} />
-                      <b>$ 300</b>
-                    </div>
-                  </RandomProducts>
-                </div>
-              </FilterCard>
+                  </FilterCard>
+                </Col>
+                <Col xs={12}>
+                  <FilterCard>
+                    <FilterTitle>Random Product</FilterTitle>
+                    <RandomProducts />
+                  </FilterCard>
+                </Col>
+              </Row>
             </Col>
             <Col xs={9}>
-              <FilterSortGrid className="mb-4">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className="d-flex align-items-center gap-10">
-                    <p className="mb-0 d-block" style={{ width: "100px" }}>
-                      Sort By:
-                    </p>
-                    <SortBarForm />
+              <div className="d-flex flex-column justify-content-between h-100">
+                <FilterSortGrid className="mb-4">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex align-items-center gap-10">
+                      <p className="mb-0 d-block">Sort By:</p>
+                      <SortBarForm />
+                    </div>
+                    <div className="d-flex align-items-center gap-10">
+                      <p className="mb-0">{renderProducts?.length} products</p>
+                      <ToggleGrid grid={grid} onChange={handleChange} />
+                    </div>
                   </div>
-                  <div className="d-flex align-items-center gap-10">
-                    <p className="totalproducts mb-0">
-                      {allProducts?.length} products
-                    </p>
-                    <ToggleGrid grid={grid} onChange={handleChange} />
+                </FilterSortGrid>
+                <FilterSortGrid className="mb-4  flex-grow-1">
+                  <Outlet />
+                </FilterSortGrid>
+                <FilterSortGrid>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <Pagination
+                      page={currentPage}
+                      count={pageNumber}
+                      variant="outlined"
+                      shape="rounded"
+                      onChange={onPageChange}
+                    />
                   </div>
-                </div>
-              </FilterSortGrid>
-              <div className="products-list pb-5">
-                <Row className="g-3">
-                  {allProducts?.map((product, index) => (
-                    <Col
-                      key={index}
-                      xs={grid ? grid : 12}
-                      md={grid ? grid : 6}
-                      lg={grid ? grid : 3}
-                    >
-                      <ProductCard grid={grid} product={product} />
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-              <div className="d-flex justify-content-center  align-items-center">
-                <Pagination count={10} variant="outlined" shape="rounded" />
+                </FilterSortGrid>
               </div>
             </Col>
           </Row>

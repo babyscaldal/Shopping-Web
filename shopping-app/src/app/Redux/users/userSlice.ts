@@ -1,10 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import authServices from "./userService"
 import { toast } from "react-toastify"
-import {
-  IRegisterFormValue,
-  IRegisterInfoData,
-} from "../../../components/SignUpForm"
+import { IRegisterInfoData } from "../../../components/SignUpForm"
 import { ILoginRequestData, IRegisterRequestData } from "./userType"
 import { RootState } from "../../store"
 
@@ -14,7 +11,7 @@ interface IAuthState {
   isLoading: boolean
   message: string
   createdUser: IRegisterRequestData
-  user: ILoginRequestData
+  loggedInUser: ILoginRequestData
   usersClient: IRegisterInfoData[]
 }
 
@@ -23,6 +20,7 @@ export const registerUser = createAsyncThunk(
   async (userData: IRegisterRequestData, thunkAPI) => {
     try {
       const res = await authServices.register(userData)
+
       return res
     } catch (error) {
       return thunkAPI.rejectWithValue(error)
@@ -44,13 +42,20 @@ export const loginUser = createAsyncThunk(
 const allUsers = localStorage.getItem("allUsers")
 console.log(allUsers)
 
+const getCustomerFromLocalStorage: string | null =
+  localStorage.getItem("customer")
+
+const currentCustomer = getCustomerFromLocalStorage
+  ? JSON.parse(getCustomerFromLocalStorage)
+  : null
+
 const authState: IAuthState = {
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
   createdUser: {} as IRegisterRequestData,
-  user: {} as ILoginRequestData,
+  loggedInUser: currentCustomer ? currentCustomer : {},
   usersClient: allUsers ? JSON.parse(allUsers) : [],
 }
 
@@ -119,7 +124,7 @@ export const authSlice = createSlice({
           state.isLoading = false
           state.isSuccess = true
           state.isError = false
-          state.user = action.payload
+          state.loggedInUser = action.payload
           if (state.isSuccess) {
             toast.success("User logged in successfully")
           }

@@ -286,3 +286,10 @@ export const selectFilterData: ISelectFilter[] = [
   { value: 6, label: "Date, old to new" },
   { value: 7, label: "Date, new to old" },
 ]
+
+export const featureImages: string[] = [
+  images.electronics,
+  images.jewelry,
+  images.menClothing,
+  images.womenClothing,
+]

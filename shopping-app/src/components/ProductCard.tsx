@@ -1,8 +1,6 @@
-import { Card } from "react-bootstrap"
+import { Card, Col, Container, Row } from "react-bootstrap"
 import Rating from "@mui/material/Rating"
 import styled, { keyframes } from "styled-components"
-import { IProductList } from "../data/data"
-import Image from "./Image"
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
 import Favorite from "@mui/icons-material/Favorite"
 import { Checkbox, IconButton } from "@mui/material"
@@ -11,6 +9,10 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined"
 import { NavLink } from "react-router-dom"
 import { IProductResponse } from "../app/Redux/products/productType"
+import { useAppSelector } from "../app/hooks"
+import { isLoadingState } from "../app/Redux/products/productSlice"
+import SkeletonItem from "./ItemSkeleton"
+import SkeletonItemCard from "./ItemSkeleton"
 
 interface IProductCard {
   product: IProductResponse
@@ -89,125 +91,67 @@ const WishListIcon = styled.div`
 
 export default function ProductCard({ product, grid }: IProductCard) {
   return (
-    <div
-      onClick={(e) => {
-        e.stopPropagation()
-      }}
-    >
-      {/* <NavLink className="position-relative" to={"/product/:id"}> */}
-      {grid === 12 ? (
-        <ProductItem className="position-relative">
-          <WishListIcon className="position-absolute z-1">
-            <Checkbox
-              // onChange={}
-              icon={<FavoriteBorder color="warning" />}
-              checkedIcon={<Favorite color="error" />}
-            />
-          </WishListIcon>
+    <NavLink to={`/product/${product?.category}/${product?.id}`}>
+      <ProductItem className="position-relative">
+        <WishListIcon className="position-absolute z-1">
+          <Checkbox
+            icon={<FavoriteBorder color="warning" />}
+            checkedIcon={<Favorite color="error" />}
+          />
+        </WishListIcon>
+        <Card>
+          <Container>
+            <Row>
+              <Col xs={12}>
+                <div className="d-flex justify-content-center align-items-center">
+                  <Card.Img
+                    style={{
+                      padding: "25px",
+                      objectFit: "contain",
+                      width: "150px",
+                      height: "150px",
+                    }}
+                    variant="top"
+                    src={product?.image}
+                  />
+                </div>
+              </Col>
+              <Col xs={12}>
+                <Card.Body>
+                  <Category>{product?.category?.toUpperCase()}</Category>
+                  <Title>{product?.title}</Title>
+                  <Detail>{product?.description}</Detail>
+                  <Rating
+                    precision={0.1}
+                    readOnly
+                    size="small"
+                    name="simple-controlled"
+                    value={product?.rating?.rate}
+                  />
 
-          <Card style={{ width: "100%" }}>
-            <div className="d-flex justify-content-center align-items-center px-3">
-              <Card.Img
-                style={{
-                  padding: "25px",
-                  objectFit: "contain",
-                  width: "150px",
-                  height: "150px",
-                }}
-                variant="top"
-                src={product?.image}
-              />
-              <Card.Body>
-                <Category>{product?.category?.toUpperCase()}</Category>
-                <Title>{product?.title}</Title>
-                <Detail>{product?.description}</Detail>
-                <Rating
-                  precision={0.1}
-                  readOnly
-                  size="small"
-                  name="simple-controlled"
-                  value={product?.rating?.rate}
-                />
-                {/* <p style={{ fontSize: "13px" }} className="mb-0 me-3">
-                  ({product?.rating?.count} reviewers)
-                </p> */}
+                  <Price className="text-success">
+                    ${product?.price.toFixed(1)}
+                  </Price>
+                </Card.Body>
+              </Col>
+            </Row>
+          </Container>
+        </Card>
 
-                <Price className="text-success">${product?.price}</Price>
-              </Card.Body>
-            </div>
-          </Card>
-
-          <ActionBar className="position-absolute">
-            <div className="d-flex flex-column gap-15 z-1 ">
-              <IconButton size="small" aria-label="compare" color="warning">
-                <CompareArrowsOutlinedIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton size="small" aria-label="views" color="warning">
-                <VisibilityOutlinedIcon fontSize="inherit" />
-              </IconButton>
-              <IconButton size="small" aria-label="add-to-cart" color="warning">
-                <ShoppingBagOutlinedIcon fontSize="inherit" />
-              </IconButton>
-            </div>
-          </ActionBar>
-        </ProductItem>
-      ) : (
-        <ProductItem className="position-relative">
-          <WishListIcon className="position-absolute z-1">
-            <Checkbox
-              icon={<FavoriteBorder color="warning" />}
-              checkedIcon={<Favorite color="error" />}
-            />
-          </WishListIcon>
-
-          <Card style={{ width: "100%" }}>
-            <div className="d-flex justify-content-center">
-              <Card.Img
-                style={{
-                  padding: "25px",
-                  objectFit: "contain",
-                  width: "150px",
-                  height: "150px",
-                }}
-                variant="top"
-                src={product?.image}
-              />
-            </div>
-            <Card.Body>
-              <Category>{product?.category?.toUpperCase()}</Category>
-              <Title>{product?.title}</Title>
-              <Detail>{product?.description}</Detail>
-              <Rating
-                precision={0.1}
-                readOnly
-                size="small"
-                name="simple-controlled"
-                value={product?.rating?.rate}
-              />
-              {/* <p style={{ fontSize: "13px" }} className="mb-0 me-3">
-                ({product?.rating?.count} reviewers)
-              </p> */}
-
-              <Price className="text-success">${product?.price}</Price>
-            </Card.Body>
-          </Card>
-
-          <ActionBar className="position-absolute">
-            <div className="d-flex flex-column gap-15 z-1 ">
-              <IconButton size="small" aria-label="compare" color="warning">
-                <CompareArrowsOutlinedIcon fontSize="small" />
-              </IconButton>
-              <IconButton size="small" aria-label="views" color="warning">
-                <VisibilityOutlinedIcon fontSize="small" />
-              </IconButton>
-              <IconButton size="small" aria-label="add-to-cart" color="warning">
-                <ShoppingBagOutlinedIcon fontSize="small" />
-              </IconButton>
-            </div>
-          </ActionBar>
-        </ProductItem>
-      )}
-      {/* </NavLink> */}
-    </div>
+        <ActionBar className="position-absolute">
+          <div className="d-flex flex-column gap-15 z-1 ">
+            <IconButton size="small" aria-label="compare" color="warning">
+              <CompareArrowsOutlinedIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" aria-label="views" color="warning">
+              <VisibilityOutlinedIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" aria-label="add-to-cart" color="warning">
+              <ShoppingBagOutlinedIcon fontSize="small" />
+            </IconButton>
+          </div>
+        </ActionBar>
+      </ProductItem>
+    </NavLink>
   )
 }
