@@ -1,5 +1,5 @@
 import { Col, Container, Dropdown, Row } from "react-bootstrap"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import images from "../Image/images"
 import { navOption } from "../data/data"
@@ -12,6 +12,9 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { AppBar } from "@mui/material"
 import UserLoggedInMenu from "./UserLoggedInMenu"
 import { useState } from "react"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { categories } from "../app/Redux/Categories/CategorySlice"
+import { getProductsInCategory } from "../app/Redux/products/productSlice"
 
 const HeaderUpperContainer = styled.div`
   background: var(--color-131921);
@@ -76,16 +79,19 @@ const DropdownItem = styled(Dropdown.Item)`
 `
 
 export default function Header() {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [isLogin] = useState(true)
+  const categoriesList = useAppSelector(categories)
   return (
     <AppBar position="fixed" sx={{ boxShadow: "none" }}>
       <HeaderUpperContainer className="py-3">
         <Container fluid="xxl">
           <Row className="align-items-center justify-content-around">
-            <Col xs={2}>
+            <Col xs={3}>
               <h2 className="m-0">
                 <NavLink className="text-white" to="/">
-                  STORAGE
+                  DIGITAL ZONE
                 </NavLink>
               </h2>
             </Col>
@@ -199,9 +205,17 @@ export default function Header() {
                   </DropdownToggle>
 
                   <DropdownMenu>
-                    <DropdownItem>Action</DropdownItem>
-                    <DropdownItem>Action</DropdownItem>
-                    <DropdownItem>Action</DropdownItem>
+                    {categoriesList?.map((category) => (
+                      <DropdownItem
+                        key={category.id}
+                        onClick={() => {
+                          dispatch(getProductsInCategory(category?.id))
+                          navigate(`products/${category?.category}`)
+                        }}
+                      >
+                        {category?.category}
+                      </DropdownItem>
+                    ))}
                   </DropdownMenu>
                 </Dropdown>
                 <MenuLink className="">

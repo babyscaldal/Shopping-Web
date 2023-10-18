@@ -6,6 +6,7 @@ import cart from "/images/cart.svg"
 import menu from "/images/menu.svg"
 import newsLetter from "/images/newsletter.png"
 import mainBanner from "/images/main-banner.jpg"
+import mainBanner2 from "/images/main-banner-1.jpg"
 import catBanner1 from "/images/catbanner-01.jpg"
 import catBanner2 from "/images/catbanner-02.jpg"
 import catBanner3 from "/images/catbanner-03.jpg"
@@ -52,6 +53,7 @@ import electronics from "/CategoryImage/electronics.avif"
 import jewelry from "/CategoryImage/jewellery.jpg"
 
 const images = {
+  mainBanner2,
   jewelry,
   electronics,
   womenClothing,

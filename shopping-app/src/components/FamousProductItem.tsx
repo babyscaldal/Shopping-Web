@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { IFamousList } from "../data/data"
+import { Link } from "react-router-dom"
 
 const FamousContent = styled.div`
   top: 10%;
@@ -27,19 +28,21 @@ export default function FamousProductItem({
   famous,
   index,
 }: IFamousProductItem) {
-  const { detail, description, image, productname } = famous
+  const { detail, description, image, productname, to } = famous
   return (
-    <FamousItem className="famous-card position-relative rounded-3">
-      <img src={image} className="img-fluid rounded rounded-3" alt="famous" />
-      <FamousContent className="position-absolute">
-        <h5 className={index === 0 ? "text-white" : "text-dark"}>{detail}</h5>
-        <h6 className={index === 0 ? "text-white" : "text-dark"}>
-          {productname}
-        </h6>
-        <p className={index === 0 ? "text-white" : "text-dark"}>
-          {description}
-        </p>
-      </FamousContent>
-    </FamousItem>
+    <Link to={to}>
+      <FamousItem className="famous-card position-relative rounded-3">
+        <img src={image} className="img-fluid rounded rounded-3" alt="famous" />
+        <FamousContent className="position-absolute">
+          <h5 className={index === 0 ? "text-white" : "text-dark"}>{detail}</h5>
+          <h6 className={index === 0 ? "text-white" : "text-dark"}>
+            {productname}
+          </h6>
+          <p className={index === 0 ? "text-white" : "text-dark"}>
+            {description}
+          </p>
+        </FamousContent>
+      </FamousItem>
+    </Link>
   )
 }

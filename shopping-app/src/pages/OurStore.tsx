@@ -1,19 +1,20 @@
+import { NavLink, Outlet } from "react-router-dom"
 import { useEffect, useState } from "react"
-import useTitle from "../hooks/useTitle"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
 import { Pagination } from "@mui/material"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+
+import useTitle from "../hooks/useTitle"
 import ToggleGrid from "../components/ToggleGrid"
 import FilterSideBarForm from "../components/FilterSideBarForm"
 import SortBarForm from "../components/SortBarForm"
-import { useAppDispatch, useAppSelector } from "../app/hooks"
 import {
   changeProductsPerPage,
   getProducts,
   getProductsInCategory,
   renderProductsState,
 } from "../app/Redux/products/productSlice"
-import { NavLink, Outlet } from "react-router-dom"
 import {
   categories,
   getAllCategories,
@@ -55,7 +56,7 @@ export const FilterTitle = styled.div`
   margin-bottom: 10px;
 `
 
-const CategoryList = styled.div`
+export const CategoryList = styled.div`
   list-style-type: none;
   a {
     font-size: 13px;
@@ -133,16 +134,16 @@ export default function OurStore({
                               color: isActive ? "blue" : "",
                             }
                           }}
-                          to={`/product/all`}
+                          to={`/products/all`}
                         >
                           All Products
                         </NavLink>
                       </li>
-                      {allCategories?.map((category, index) => (
-                        <li key={`${index} - category`}>
+                      {allCategories?.map((category) => (
+                        <li key={category?.id}>
                           <NavLink
                             onClick={() => {
-                              dispatch(getProductsInCategory(category))
+                              dispatch(getProductsInCategory(category?.id))
                               onCategoryChange()
                             }}
                             style={({ isActive }) => {
@@ -150,9 +151,9 @@ export default function OurStore({
                                 color: isActive ? "blue" : "",
                               }
                             }}
-                            to={`/product/${category}`}
+                            to={`/products/${category?.category}`}
                           >
-                            {toCapitalize(category)}
+                            {toCapitalize(category?.category)}
                           </NavLink>
                         </li>
                       ))}
@@ -171,10 +172,10 @@ export default function OurStore({
                     <div className="product-tags d-flex flex-wrap align-items-center gap-10">
                       {allCategories?.map((category, index) => (
                         <span
-                          key={`${index} - ${category}`}
+                          key={category.id}
                           className="badge bg-light text-secondary rounded-3 py-2 px-3"
                         >
-                          {toCapitalize(category)}
+                          {toCapitalize(category?.category)}
                         </span>
                       ))}
                     </div>

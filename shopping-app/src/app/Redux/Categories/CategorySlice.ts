@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import categoryService from "./CategoryServices"
 import { RootState } from "../../store"
-import { ICategoryState } from "./CategoryType"
+import { ICategoryResponse } from "./CategoryType"
 
 export const getAllCategories = createAsyncThunk(
   "category/getAllCategories",
@@ -15,12 +15,20 @@ export const getAllCategories = createAsyncThunk(
   },
 )
 
+interface ICategoryState {
+  isLoading: boolean
+  isSuccess: boolean
+  isError: boolean
+  categories: ICategoryResponse[]
+  message: any
+}
+
 const categoryState: ICategoryState = {
-  categories: [] as string[],
+  categories: [] as ICategoryResponse[],
   isLoading: false,
   isSuccess: false,
   isError: false,
-  message: null,
+  message: "",
 }
 
 export const categorySlice = createSlice({
@@ -34,7 +42,7 @@ export const categorySlice = createSlice({
       })
       .addCase(
         getAllCategories.fulfilled,
-        (state, action: PayloadAction<string[]>) => {
+        (state, action: PayloadAction<ICategoryResponse[]>) => {
           state.categories = action.payload
           state.isLoading = false
           state.isSuccess = true
@@ -45,7 +53,7 @@ export const categorySlice = createSlice({
         state.isLoading = false
         state.isSuccess = false
         state.isError = true
-        state.message = action.error
+        state.message = action.error.message
       })
   },
 })

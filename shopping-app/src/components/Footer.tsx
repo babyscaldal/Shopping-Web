@@ -1,8 +1,9 @@
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import images from "../Image/images"
 import { Link } from "react-router-dom"
 import { BsLinkedin, BsGithub, BsYoutube, BsInstagram } from "react-icons/bs"
+
+import images from "../Image/images"
 import SubscribeBarForm from "./SubscribeBarForm"
 
 const FooterContainer = styled.footer`
@@ -17,14 +18,14 @@ export default function Footer() {
     <>
       <FooterContainer className="py-4">
         <Container fluid="xxl">
-          <Row className="align-items-center">
-            <Col xs={5}>
+          <Row className="align-items-center g-3">
+            <Col xs={12} lg={5}>
               <FooterTop className="d-flex gap-30 align-items-center ">
                 <img src={images.newsLetter} alt="newsLetter" />
-                <h2 className="mb-0 text-white">Sign Up for Newsletter</h2>
+                <h2 className="mb-0 text-white  ">Sign Up for Newsletter</h2>
               </FooterTop>
             </Col>
-            <Col xs={7}>
+            <Col xs={12} lg={7}>
               <SubscribeBarForm />
             </Col>
           </Row>
@@ -32,8 +33,8 @@ export default function Footer() {
       </FooterContainer>
       <FooterContainer className="py-">
         <Container fluid="xxl">
-          <Row>
-            <Col xs={4}>
+          <Row className="g-3">
+            <Col xs={12} md={6} lg={4}>
               <h4 className="text-white my-4">Contact Us</h4>
               <address className="text-white fs-6">
                 Storage Corp.
@@ -73,7 +74,7 @@ export default function Footer() {
                 </a>
               </div>
             </Col>
-            <Col xs={3}>
+            <Col xs={12} md={6} lg={3}>
               <h4 className="text-white my-4">Information</h4>
               <FooterLinks className="d-flex flex-column ">
                 <Link to="/privacy-policy" className="text-white py-2 mb-1">
@@ -93,7 +94,7 @@ export default function Footer() {
                 </Link>
               </FooterLinks>
             </Col>
-            <Col xs={3}>
+            <Col xs={12} md={6} lg={3}>
               <h4 className="text-white my-4">Account</h4>
               <FooterLinks className="d-flex flex-column ">
                 <Link className="text-white py-2 mb-1" to="">
@@ -107,7 +108,7 @@ export default function Footer() {
                 </Link>
               </FooterLinks>
             </Col>
-            <Col xs={2}>
+            <Col xs={12} md={6} lg={2}>
               <h4 className="text-white my-4">Quick Links</h4>
               <FooterLinks className="d-flex flex-column ">
                 <Link className="text-white py-2 mb-1" to="">

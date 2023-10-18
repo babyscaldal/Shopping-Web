@@ -91,7 +91,7 @@ const WishListIcon = styled.div`
 
 export default function ProductCard({ product, grid }: IProductCard) {
   return (
-    <NavLink to={`/product/${product?.category}/${product?.id}`}>
+    <NavLink to={`/products/${product?.category}/${product?.id}`}>
       <ProductItem className="position-relative">
         <WishListIcon className="position-absolute z-1">
           <Checkbox
@@ -107,11 +107,11 @@ export default function ProductCard({ product, grid }: IProductCard) {
                   <Card.Img
                     style={{
                       padding: "25px",
-                      objectFit: "contain",
+                      objectFit: "cover",
                       width: "150px",
                       height: "150px",
                     }}
-                    variant="top"
+                    // variant="top"
                     src={product?.image}
                   />
                 </div>

@@ -1,39 +1,23 @@
-import { Button, Col, Container, Row } from "react-bootstrap"
+import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import images from "../Image/images"
 import { Link } from "react-router-dom"
-import ServiceItem from "../components/ServiceItem"
-import {
-  blogList,
-  brandList,
-  famousList,
-  productList,
-  smallerCart,
-  totalServices,
-} from "../data/data"
-import CategoryItem from "../components/CaregoryItem"
 import Marquee from "react-fast-marquee"
+
+import ServiceItem from "../components/ServiceItem"
+import { brandList, famousList, smallerCart, totalServices } from "../data/data"
+import CategoryItem from "../components/CategoryItem"
 import Image from "../components/Image"
 import BlogCard from "../components/BlogCard"
-import SpecialProduct from "../components/SpecialProduct"
 import FamousProductItem from "../components/FamousProductItem"
 import useTitle from "../hooks/useTitle"
 import PopularList from "../components/PopularList"
-import { useAppSelector } from "../app/hooks"
-import {
-  electronicsState,
-  jewelryState,
-  menClothingState,
-  womenClothingState,
-} from "../app/Redux/products/productSlice"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { getProductsInCategory } from "../app/Redux/products/productSlice"
 import { categories } from "../app/Redux/Categories/CategorySlice"
-import { IProductResponse } from "../app/Redux/products/productType"
+import HeroCarousel from "../components/Carousel"
+import { allBlogState } from "../app/Redux/blogs/blogSlice"
 
 const FirstHomeWrapper = styled.section`
-  background-color: var(--color-f5f5f7);
-`
-
-const SpecialProductsWrapper = styled.section`
   background-color: var(--color-f5f5f7);
 `
 
@@ -66,37 +50,7 @@ const FamousWrapper = styled.section`
 const CategoriesWrapper = styled.section`
   background-color: var(--color-f5f5f7);
 `
-const MainBanner = styled.div``
 
-const MainBannerContent = styled.div`
-  top: 15%;
-  left: 5%;
-
-  h4 {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 24px;
-    color: var(--color-bf4800);
-    margin: 0 0 12px;
-    letter-spacing: 0.3px;
-    text-transform: uppercase;
-  }
-
-  h5 {
-    font-size: 42px;
-    line-height: 54px;
-    letter-spacing: -2px;
-    font-weight: 500;
-    text-transform: none;
-  }
-
-  p {
-    font-size: 18px;
-    line-height: 28px;
-    letter-spacing: 0.4px;
-    color: var(--color-131921);
-  }
-`
 const SmallerBanner = styled.div``
 
 const SmallerBannerContent = styled.div`
@@ -128,11 +82,7 @@ const SmallerBannerContent = styled.div`
     color: var(--color-131921);
   }
 `
-const Services = styled.div`
-  background-color: #fff;
-  padding: 20px 20px;
-  border-radius: 10px;
-`
+const Services = styled.div``
 
 const Categories = styled.div``
 
@@ -150,9 +100,6 @@ const BlogWrapper = styled.section`
   background-color: var(--color-f5f5f7);
 `
 
-const ProductWrapper = styled.section`
-  background-color: var(--color-f5f5f7);
-`
 const Heading = styled.h3`
   font-size: 26px;
   line-height: 32px;
@@ -168,70 +115,38 @@ const AllWrapper = styled.section`
 export default function Home() {
   useTitle("Storage")
 
+  const dispatch = useAppDispatch()
+
   const allCategories = useAppSelector(categories)
+  const allBlogs = useAppSelector(allBlogState)
 
-  const menClothingProducts = useAppSelector(menClothingState)
-  // const menClothingPopularProduct = menClothingProducts?.toSorted(
-  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
-  // )
-
-  console.log(menClothingProducts)
-
-  const womenClothingProducts = useAppSelector(womenClothingState)
-  // const womenClothingPopularProduct = womenClothingProducts?.toSorted(
-  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
-  // )
-
-  const electronicsProducts = useAppSelector(electronicsState)
-  // const electronicsPopularProduct = electronicsProducts?.toSorted(
-  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
-  // )
-
-  const jewelryProducts = useAppSelector(jewelryState)
-  // const jewelryPopularProduct = jewelryProducts?.toSorted(
-  //   (a, b) => b?.rating?.rate - a?.rating?.rate,
-  // )
   return (
     <AllWrapper>
       <FirstHomeWrapper className="pt-3 pb-5">
         <Container fluid="xxl">
           <Row className="g-3">
-            <Col xs={6}>
-              <MainBanner className="position-relative">
-                <img
-                  className="img-fluid rounded-3"
-                  src={images.mainBanner}
-                  alt="mainBanner"
-                />
-                <MainBannerContent className="p-3 position-absolute">
-                  <h4>SUPERCHARGED FOR PROS.</h4>
-                  <h5>iPAD S13+ Pro.</h5>
-                  <p>From &999.00 or $41.62/mo.</p>
-                  <Link to="">
-                    <Button variant="secondary" className="button">
-                      BUY NOW
-                    </Button>
-                  </Link>
-                </MainBannerContent>
-              </MainBanner>
+            <Col xs={12} lg={6}>
+              <HeroCarousel />
             </Col>
-            <Col xs={6}>
-              <div className="d-flex flex-wrap justify-content-between align-items-center">
+            <Col xs={12} lg={6}>
+              <div className="d-flex text-center flex-wrap justify-content-between align-items-center">
                 <Row className="g-3">
                   {smallerCart.map((cart, index) => (
-                    <Col key={index} xs={6}>
-                      <SmallerBanner className="position-relative">
-                        <img
-                          className="img-fluid rounded-3"
-                          src={cart.image}
-                          alt="mainBanner"
-                        />
-                        <SmallerBannerContent className="position-absolute w-50">
-                          <h4>{cart.title}</h4>
-                          <h5>{cart.product}</h5>
-                          <p>{cart.info}</p>
-                        </SmallerBannerContent>
-                      </SmallerBanner>
+                    <Col key={index} xs={12} md={6}>
+                      <Link to={cart.to}>
+                        <SmallerBanner className="position-relative">
+                          <img
+                            className="img-fluid rounded-3"
+                            src={cart.image}
+                            alt="mainBanner"
+                          />
+                          <SmallerBannerContent className="position-absolute w-50">
+                            <h4>{cart.title}</h4>
+                            <h5>{cart.product}</h5>
+                            <p>{cart.info}</p>
+                          </SmallerBannerContent>
+                        </SmallerBanner>
+                      </Link>
                     </Col>
                   ))}
                 </Row>
@@ -242,15 +157,19 @@ export default function Home() {
       </FirstHomeWrapper>
       <ServicesWrapper className="py-5">
         <Container fluid="xxl">
-          <Row>
+          <Row className="g-3 ">
             <Col xs={12}>
-              <Heading>Services</Heading>
-            </Col>
-            <Col xs={12}>
-              <Services className="d-flex align-items-center justify-content-between">
-                {totalServices.map((service, index) => (
-                  <ServiceItem key={index} service={service} />
-                ))}
+              <Services>
+                <Row className="g-3 text-center text-md-start">
+                  <Col xs={12}>
+                    <Heading>Services</Heading>
+                  </Col>
+                  {totalServices.map((service, index) => (
+                    <Col xs={12} md={4}>
+                      <ServiceItem key={index} service={service} />
+                    </Col>
+                  ))}
+                </Row>
               </Services>
             </Col>
           </Row>
@@ -263,18 +182,22 @@ export default function Home() {
         >
           <Container fluid="xxl">
             <Categories>
-              <Row className="g-3">
+              <Row className="g-3 text-center text-md-start">
                 <Col xs={12}>
                   <Heading>Categories List</Heading>
                 </Col>
-                {allCategories.map((item, index) => {
+                {allCategories?.map((item) => {
                   return (
-                    <Col key={item} xs={3}>
-                      <CategoryItem
-                        quantity={menClothingProducts?.length}
-                        item={item}
-                        index={index}
-                      />
+                    <Col
+                      key={item.id}
+                      xs={12}
+                      md={6}
+                      lg={3}
+                      onClick={() => {
+                        dispatch(getProductsInCategory(item?.id))
+                      }}
+                    >
+                      <CategoryItem item={item} />
                     </Col>
                   )
                 })}
@@ -283,49 +206,20 @@ export default function Home() {
           </Container>
         </div>
       </CategoriesWrapper>
-      <ProductWrapper className="py-5">
-        <Container fluid="xl">
-          <Row className="g-3">
+      <FamousWrapper className="py-5">
+        <Container fluid="xxl">
+          <Row className="g-3 text-center text-md-start">
             <Col xs={12}>
               <Heading>Featured Collection</Heading>
             </Col>
-            {productList.map((product, index) => (
-              <Col key={index} xs={3}>
-                {/* <ProductCard product={product} /> */}
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </ProductWrapper>
-      <FamousWrapper className="py-5">
-        <Container fluid="xxl">
-          <Row>
             {famousList.map((famous, index) => (
-              <Col key={index} xs={3}>
+              <Col key={index} xs={12} md={6} lg={3}>
                 <FamousProductItem index={index} famous={famous} />
               </Col>
             ))}
           </Row>
         </Container>
       </FamousWrapper>
-      <SpecialProductsWrapper className="py-5">
-        <Container fluid="xxl">
-          <Row>
-            <Col xs={12}>
-              <Heading>Special Products</Heading>
-            </Col>
-            <Col xs={6} className="mb-3">
-              <SpecialProduct />
-            </Col>
-            <Col xs={6} className="mb-3">
-              <SpecialProduct />
-            </Col>
-            <Col xs={6} className="mb-3">
-              <SpecialProduct />
-            </Col>
-          </Row>
-        </Container>
-      </SpecialProductsWrapper>
       <PopularList />
       <MarqueeWrapper className="py-5">
         <Container fluid="xxl">
@@ -351,12 +245,12 @@ export default function Home() {
       </MarqueeWrapper>
       <BlogWrapper className="py-5">
         <Container fluid="xxl">
-          <Row>
+          <Row className="g-3 text-center text-md-start">
             <Col xs={12}>
               <Heading>Our Latest Blogs</Heading>
             </Col>
-            {blogList.map((blog, index) => (
-              <Col key={index} xs={3}>
+            {allBlogs.map((blog, index) => (
+              <Col key={index} xs={12} md={6} lg={3}>
                 <BlogCard blog={blog} />
               </Col>
             ))}

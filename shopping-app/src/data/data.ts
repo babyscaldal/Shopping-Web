@@ -7,8 +7,8 @@ export const navOption = [
     to: "/",
   },
   {
-    title: "Our Storer",
-    to: "/product",
+    title: "Our Store",
+    to: "/products",
   },
   {
     title: "Blogs",
@@ -26,26 +26,30 @@ interface ISmallerCart {
   product: string
   info: string
   image: string
+  to: string
 }
 
 export const smallerCart: ISmallerCart[] = [
   {
     title: "BEST SALE",
-    product: "Laptops Max",
-    info: `From $1699.00 or $64.62/mo`,
+    product: "MacBook",
+    info: `From $999.0 `,
     image: images.catBanner1,
+    to: "/products/Mac/1",
   },
   {
     title: "15% OFF",
-    product: "Smartwatch 7",
+    product: "Apple Watch 9",
     info: "Shop the latest band styles and colors",
     image: images.catBanner2,
+    to: "/products/Apple%20Watch/17",
   },
   {
     title: "NEW ARRIVAL",
     product: "Buy IPad Air",
-    info: "From $599 or $49.91/mo for 12 mo.",
+    info: "From $599",
     image: images.catBanner3,
+    to: "/products/iPad/12",
   },
 
   {
@@ -53,6 +57,7 @@ export const smallerCart: ISmallerCart[] = [
     product: "AirPods Max",
     info: "High-fidelity playback & ultra-low distortion",
     image: images.catBanner4,
+    to: "/products/Airpods/22",
   },
 ]
 
@@ -241,33 +246,37 @@ export interface IFamousList {
   detail: string
   productname: string
   description: string
+  to: string
 }
 
 export const famousList: IFamousList[] = [
   {
     image: images.famous1,
     detail: "Big Screen",
-    productname: "Smart Watch Series 7",
-    description: "From $399or $16.62/mo. for 24 mo.*",
+    productname: "Apple Watch Collection",
+    description: "From $249",
+    to: "/products/Apple%20Watch",
   },
   {
     image: images.famous2,
     detail: "Studio Display",
-    productname: "600 nits of brightness.",
-    description: "27-inch 5K Retina display",
+    productname: "MacBook Collection",
+    description: "From $249",
+    to: "/products/Mac",
   },
   {
     image: images.famous3,
-    detail: "smartphones",
-    productname: "Smartphone 13 Pro",
-    description:
-      "Now in Green. From $999.00 or $41.62/mo. for 24 mo. Footnote*",
+    detail: "iPhone",
+    productname: "iPhone Collection",
+    description: "From $429 ",
+    to: "",
   },
   {
     image: images.famous4,
-    detail: "home speakers",
-    productname: "Room-filling sound.",
-    description: "From $699 or $116.58/mo. for 12 mo.*",
+    detail: "Home Speaker",
+    productname: "HomePod Collection",
+    description: "From $699",
+    to: "",
   },
 ]
 
