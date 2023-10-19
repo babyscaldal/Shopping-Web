@@ -1,12 +1,14 @@
 import { FormProvider, useForm } from "react-hook-form"
 import CustomCheckbox from "./CustomCheckbox"
-import { availabilityOptions, sizeOptions } from "../data/checkboxData"
+import { rateOption } from "../data/checkboxData"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { SubTitle } from "../pages/OurStore"
-import Color from "./Colors"
 import { Button } from "@mui/material"
+
+import { SubTitle } from "../pages/OurStore"
 import CustomTextField from "./CustomTextField"
+import { useAppDispatch } from "../app/hooks"
+import { filterProductsByRate } from "../app/Redux/products/productSlice"
 
 const numberRegex = /^[0-9]+$/
 
@@ -17,26 +19,40 @@ const priceValueSchema = z.object({
   minPrice: z.string().refine((value) => numberRegex.test(value), {
     message: "Must be number",
   }),
-  availability: z.string().array().optional(),
-  size: z.string().array().optional(),
+  rate: z.string().array().optional(),
 })
 
+interface IFilterSideBarFormValue {
+  rate: number[]
+  minPrice: string
+  maxPrice: string
+}
+
 export default function FilterSideBarForm() {
-  const form = useForm({
-    defaultValues: { availability: [], size: [], minPrice: "", maxPrice: "" },
+  const dispatch = useAppDispatch()
+  const form = useForm<IFilterSideBarFormValue>({
+    defaultValues: { rate: [], minPrice: "", maxPrice: "" },
     resolver: zodResolver(priceValueSchema),
   })
 
   const { handleSubmit, reset } = form
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: IFilterSideBarFormValue) => {
     console.log(data)
+  }
+
+  const handleCheckboxChange = (value: number[]) => {
+    dispatch(filterProductsByRate(value))
   }
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <SubTitle>Availability</SubTitle>
-        <CustomCheckbox options={availabilityOptions} name="availability" />
+        <SubTitle>Rate</SubTitle>
+        <CustomCheckbox
+          onCheckboxChange={handleCheckboxChange}
+          options={rateOption}
+          name="rate"
+        />
         <SubTitle>Price</SubTitle>
         <div className="d-flex align-items-center gap-10">
           <CustomTextField
@@ -54,12 +70,6 @@ export default function FilterSideBarForm() {
             type={"text"}
           />
         </div>
-        <SubTitle>Colors</SubTitle>
-        <div>
-          <Color />
-        </div>
-        <SubTitle>Size</SubTitle>
-        <CustomCheckbox options={sizeOptions} name="size" />
 
         <div className="mt-3">
           <Button

@@ -5,7 +5,7 @@ import BlogCard from "../components/BlogCard"
 import { CategoryList, FilterCard, FilterTitle } from "./OurStore"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { allBlogState } from "../app/Redux/blogs/blogSlice"
-import { NavLink } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import {
   getProducts,
   getProductsInCategory,
@@ -30,7 +30,7 @@ export default function Blog({ onCategoryChange }: IBlog) {
   return (
     <Wrapper>
       <Container fluid="xxl" className="blog-wrapper home-wrapper-2 py-5">
-        <Row className="g-3">
+        <Row className="g-">
           <Col xs={3}>
             <FilterCard>
               <FilterTitle>Categories</FilterTitle>
@@ -76,7 +76,7 @@ export default function Blog({ onCategoryChange }: IBlog) {
           <Col xs={9}>
             <Row className="g-3">
               {allBlogs?.map((blog, index) => (
-                <Col key={index} xs={3}>
+                <Col key={index} xs={4}>
                   <BlogCard blog={blog} />
                 </Col>
               ))}

@@ -13,9 +13,14 @@ const FamousItem = styled.div`
   box-shadow: 0 0 10px #0000001a;
 
   transition: all 0.3s;
-
   &:hover {
     transform: scale(0.95);
+  }
+
+  overflow: hidden;
+  &:hover img {
+    transition: all 0.5s ease;
+    transform: scale(1.05);
   }
 `
 

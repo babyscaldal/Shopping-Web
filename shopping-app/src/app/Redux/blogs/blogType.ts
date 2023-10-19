@@ -1,7 +1,7 @@
 export interface IBlogResponse {
   id: number
   title: string
-  url: string
+  content: string
   image: string
   createdAt: string
 }

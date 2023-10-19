@@ -4,7 +4,7 @@ import styled from "styled-components"
 import images from "../Image/images"
 import { navOption } from "../data/data"
 import SearchBarForm from "./SearchBarForm"
-import { Badge } from "@mui/material"
+import { Badge, IconButton } from "@mui/material"
 import CompareIcon from "@mui/icons-material/Compare"
 import PersonIcon from "@mui/icons-material/Person"
 import FavoriteIcon from "@mui/icons-material/Favorite"
@@ -37,7 +37,11 @@ const StyledNavLink = styled(NavLink)`
   letter-spacing: 0.3;
   text-transform: uppercase;
 `
-
+const DropdownMenu = styled(Dropdown.Menu)`
+  background-color: var(--color-131921);
+  transform: translate3d(0px, 58px, 0px) !important;
+  width: 100%;
+`
 const DropdownToggle = styled(Dropdown.Toggle)`
   color: white;
   font-size: 16px;
@@ -51,15 +55,9 @@ const DropdownToggle = styled(Dropdown.Toggle)`
   }
 `
 
-const DropdownMenu = styled(Dropdown.Menu)`
-  background-color: var(--color-131921);
-  transform: translate3d(0px, 49px, 0px) !important;
-  width: 100%;
-`
-
 const DropdownItem = styled(Dropdown.Item)`
   font-size: 14px;
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 3px;
   border-bottom: 1px solid var(--color-3b4149);
   color: #fff;
@@ -75,6 +73,13 @@ const DropdownItem = styled(Dropdown.Item)`
 
   &:active {
     background-color: var(--color-febd69);
+  }
+`
+
+const NavItemWrapper = styled.div`
+  &:hover svg {
+    transform: rotateY(360deg);
+    transition: all 1s linear;
   }
 `
 
@@ -97,7 +102,7 @@ export default function Header() {
             </Col>
             <Col xs={8}>
               <div className="header-upper-links d-flex align-items-center justify-content-end gap-30">
-                <div>
+                <NavItemWrapper>
                   <NavLink
                     style={({ isActive }) => {
                       return {
@@ -113,8 +118,8 @@ export default function Header() {
                     <CompareIcon />
                     <p className="mb-0">Compare</p>
                   </NavLink>
-                </div>
-                <div>
+                </NavItemWrapper>
+                <NavItemWrapper>
                   <NavLink
                     style={({ isActive }) => {
                       return {
@@ -139,9 +144,9 @@ export default function Header() {
                     </Badge>
                     <p className="mb-0">Favorite</p>
                   </NavLink>
-                </div>
+                </NavItemWrapper>
                 {/* {isLogin && ( */}
-                <div>
+                <NavItemWrapper>
                   <NavLink
                     style={({ isActive }) => {
                       return {
@@ -157,9 +162,9 @@ export default function Header() {
                     <PersonIcon />
                     <p className="mb-0">Login</p>
                   </NavLink>
-                </div>
+                </NavItemWrapper>
                 {/* )} */}
-                <div>
+                <NavItemWrapper>
                   <NavLink
                     style={({ isActive }) => {
                       return {
@@ -177,7 +182,7 @@ export default function Header() {
                       <ShoppingCartOutlinedIcon />
                     </Badge>
                   </NavLink>
-                </div>
+                </NavItemWrapper>
                 {/* {!isLogin && ( */}
                 <div>
                   <UserLoggedInMenu />

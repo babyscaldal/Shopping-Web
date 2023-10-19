@@ -15,6 +15,12 @@ const StyledServiceItem = styled.div`
   background: #fff;
   cursor: pointer;
   transition: all 0.3s linear;
+
+  &:hover img {
+    transform: rotateY(360deg);
+    transition: all 1s linear;
+  }
+
   &:hover {
     transform: scale(1.05);
   }
@@ -27,7 +33,7 @@ function ServiceItem({ service }: IServiceItem) {
   const { image, info, title } = service
   return (
     <StyledServiceItem>
-      <Image contain src={image} alt={title} height="55px" width="55px" />
+      <Image contain src={image} alt={title} height="50px" width="50px" />
       <div>
         <h6>{title}</h6>
         <p className="mb-0">{info}</p>

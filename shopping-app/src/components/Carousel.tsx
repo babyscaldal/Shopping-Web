@@ -36,8 +36,8 @@ const MainBannerContent = styled.div`
 `
 
 function HeroCarousel() {
-  const [index, setIndex] = useState(0)
   const navigate = useNavigate()
+  const [index, setIndex] = useState(0)
 
   const handleSelect = (selectedIndex: number) => {
     setIndex(selectedIndex)
@@ -55,7 +55,6 @@ function HeroCarousel() {
           <h4>SUPERCHARGED FOR PROS.</h4>
           <h5>iPAD Pro.</h5>
           <p>From &799.00</p>
-          {/* <Link to="http://localhost:5173/products/iPhone/7"> */}
           <Button
             onClick={() => {
               navigate("/products/iPad/11")

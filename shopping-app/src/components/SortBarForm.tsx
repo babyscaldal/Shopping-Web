@@ -1,26 +1,72 @@
 import { useForm, FormProvider } from "react-hook-form"
+import { MenuItem } from "@mui/material"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+
 import CustomSelectField from "./CustomSelectField"
 import { selectFilterData } from "../data/data"
-import { MenuItem } from "@mui/material"
+import {
+  renderProductsState,
+  sortProductsByAlphabetAZ,
+  sortProductsByAlphabetZA,
+  sortProductsByPriceHigh,
+  sortProductsByPriceLow,
+} from "../app/Redux/products/productSlice"
+import { useEffect } from "react"
+
+interface selectFormValue {
+  sortValue: number
+}
 
 export default function SortBarForm() {
-  const form = useForm({
-    defaultValues: { sort: 0 },
+  const dispatch = useAppDispatch()
+  // const renderProducts = useAppSelector(renderProductsState)
+
+  const form = useForm<selectFormValue>({
+    defaultValues: { sortValue: 0 },
     mode: "all",
   })
 
   const { handleSubmit } = form
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: selectFormValue) => {
     console.log(data)
+  }
+
+  const handleSortProducts = (value: number) => {
+    switch (value) {
+      case 1:
+        dispatch(sortProductsByAlphabetAZ())
+        return
+      case 2:
+        dispatch(sortProductsByAlphabetZA())
+        return
+      case 3:
+        dispatch(sortProductsByPriceHigh())
+        return
+      case 4:
+        dispatch(sortProductsByPriceLow())
+        return
+
+      default:
+        return
+    }
   }
 
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomSelectField width="250px" name={"sort"}>
+        <CustomSelectField
+          onSelectValueChange={handleSortProducts}
+          width="250px"
+          name={"sortValue"}
+        >
           {selectFilterData.map((item, index) => (
-            <MenuItem key={index} value={item.value}>
+            <MenuItem
+              selected={item.selected}
+              disabled={item.disabled}
+              key={index}
+              value={item.value}
+            >
               {item.label}
             </MenuItem>
           ))}

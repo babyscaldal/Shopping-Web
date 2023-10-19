@@ -1,5 +1,9 @@
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
+import "swiper/css"
+import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
+import "swiper/css/navigation"
 
 import GlobalStyles from "./style/GlobalStyle"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
@@ -7,6 +11,8 @@ import OurStore from "./pages/OurStore"
 import ProductsList from "./components/ProductsList"
 import { useEffect, useMemo, useState } from "react"
 import {
+  cloneToFilterProductList,
+  filterProductsListState,
   getPopularProducts,
   getProducts,
   renderProductsState,
@@ -35,14 +41,15 @@ import { getAllBlogs } from "./app/Redux/blogs/blogSlice"
 
 function App() {
   const renderProducts = useAppSelector(renderProductsState)
+  const filterProducts = useAppSelector(filterProductsListState)
   const dispatch = useAppDispatch()
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemPerPage = 9
+  const itemPerPage = 6
 
   const startItem = (currentPage - 1) * itemPerPage
   const endItem = startItem + itemPerPage
-  const displayedProducts = renderProducts?.slice(startItem, endItem)
+  const displayedProducts = filterProducts?.slice(startItem, endItem)
 
   const handlePageChange = (event: any, page: number) => {
     setCurrentPage(page)
@@ -61,6 +68,10 @@ function App() {
     dispatch(getPopularProducts())
     dispatch(getAllBlogs())
   }, [])
+
+  useEffect(() => {
+    dispatch(cloneToFilterProductList(renderProducts))
+  }, [renderProducts])
 
   const router = useMemo(() => {
     return createBrowserRouter([
@@ -96,11 +107,11 @@ function App() {
               },
               {
                 path: "all",
-                element: <ProductsList listItem={displayedProducts} />,
+                element: <ProductsList listItem={filterProducts} />,
               },
               {
                 path: ":category",
-                element: <ProductsList listItem={displayedProducts} />,
+                element: <ProductsList listItem={filterProducts} />,
               },
             ],
           },

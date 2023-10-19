@@ -41,7 +41,7 @@ const ProductItem = styled(Card)`
   cursor: pointer;
 
   &:hover {
-    transform: translateY(-10px);
+    transform: scale(0.98);
   }
 
   &:hover ${ActionBar} {
@@ -94,7 +94,7 @@ const WishListIcon = styled.div`
   left: 5px;
 `
 
-export default function ProductCard({ product, grid }: IProductCard) {
+export default function PopularCard({ product, grid }: IProductCard) {
   return (
     <NavLink to={`/products/${product?.category}/${product?.id}`}>
       <ProductItem className="position-relative">
@@ -114,7 +114,7 @@ export default function ProductCard({ product, grid }: IProductCard) {
                       padding: "25px",
                       objectFit: "cover",
                       width: "225px",
-                      height: "225px  ",
+                      height: "225px",
                     }}
                     // variant="top"
                     src={product?.image}

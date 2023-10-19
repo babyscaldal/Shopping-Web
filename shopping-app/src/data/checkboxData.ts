@@ -1,14 +1,12 @@
 export interface IOption {
-  value: string
+  value: number
   label: string
 }
 
-export const availabilityOptions: IOption[] = [
-  { value: "in-stock", label: "In Stock (1)" },
-  { value: "out-of-stock", label: "Out of Stock (1)" },
-]
-
-export const sizeOptions: IOption[] = [
-  { value: "size-s", label: "S (2)" },
-  { value: "size-m", label: "M (2)" },
+export const rateOption: IOption[] = [
+  { value: 5, label: "5 Star" },
+  { value: 4, label: "4 Star" },
+  { value: 3, label: "3 Star" },
+  { value: 2, label: "2 Star" },
+  { value: 1, label: "1 Star" },
 ]

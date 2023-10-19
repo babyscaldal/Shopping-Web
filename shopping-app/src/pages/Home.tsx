@@ -2,6 +2,10 @@ import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
 import Marquee from "react-fast-marquee"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
+import { SwiperSlide } from "swiper/react"
+import { IconButton } from "@mui/material"
 
 import ServiceItem from "../components/ServiceItem"
 import { brandList, famousList, smallerCart, totalServices } from "../data/data"
@@ -16,6 +20,7 @@ import { getProductsInCategory } from "../app/Redux/products/productSlice"
 import { categories } from "../app/Redux/Categories/CategorySlice"
 import HeroCarousel from "../components/Carousel"
 import { allBlogState } from "../app/Redux/blogs/blogSlice"
+import ResponsiveSlides from "../components/ResponsiveSlides"
 
 const FirstHomeWrapper = styled.section`
   background-color: var(--color-f5f5f7);
@@ -51,7 +56,16 @@ const CategoriesWrapper = styled.section`
   background-color: var(--color-f5f5f7);
 `
 
-const SmallerBanner = styled.div``
+const SmallerBanner = styled.div`
+  overflow: hidden;
+  img {
+    border-radius: 8px;
+  }
+  &:hover img {
+    transition: all 0.25s ease;
+    transform: scale(1.05);
+  }
+`
 
 const SmallerBannerContent = styled.div`
   top: 25%;
@@ -104,7 +118,6 @@ const Heading = styled.h3`
   font-size: 26px;
   line-height: 32px;
   font-weight: 500;
-  margin-bottom: 30px;
 `
 
 const AllWrapper = styled.section`
@@ -129,14 +142,14 @@ export default function Home() {
               <HeroCarousel />
             </Col>
             <Col xs={12} lg={6}>
-              <div className="d-flex text-center flex-wrap justify-content-between align-items-center">
+              <div className="d-flex text-center text-md-start flex-wrap justify-content-between align-items-center">
                 <Row className="g-3">
                   {smallerCart.map((cart, index) => (
                     <Col key={index} xs={12} md={6}>
                       <Link to={cart.to}>
                         <SmallerBanner className="position-relative">
                           <img
-                            className="img-fluid rounded-3"
+                            className="img-fluid"
                             src={cart.image}
                             alt="mainBanner"
                           />
@@ -155,6 +168,7 @@ export default function Home() {
           </Row>
         </Container>
       </FirstHomeWrapper>
+
       <ServicesWrapper className="py-5">
         <Container fluid="xxl">
           <Row className="g-3 ">
@@ -165,8 +179,8 @@ export default function Home() {
                     <Heading>Services</Heading>
                   </Col>
                   {totalServices.map((service, index) => (
-                    <Col xs={12} md={4}>
-                      <ServiceItem key={index} service={service} />
+                    <Col key={index} xs={12} md={4}>
+                      <ServiceItem service={service} />
                     </Col>
                   ))}
                 </Row>
@@ -175,6 +189,7 @@ export default function Home() {
           </Row>
         </Container>
       </ServicesWrapper>
+
       <CategoriesWrapper>
         <div
           className="py-5"
@@ -206,12 +221,14 @@ export default function Home() {
           </Container>
         </div>
       </CategoriesWrapper>
+
       <FamousWrapper className="py-5">
         <Container fluid="xxl">
           <Row className="g-3 text-center text-md-start">
             <Col xs={12}>
               <Heading>Featured Collection</Heading>
             </Col>
+
             {famousList.map((famous, index) => (
               <Col key={index} xs={12} md={6} lg={3}>
                 <FamousProductItem index={index} famous={famous} />
@@ -220,9 +237,11 @@ export default function Home() {
           </Row>
         </Container>
       </FamousWrapper>
+
       <PopularList />
-      <MarqueeWrapper className="py-5">
-        <Container fluid="xxl">
+
+      <MarqueeWrapper>
+        <Container fluid="xxl p-0 py-5">
           <Row>
             <Col xs={12}>
               <MarqueeInner className="bg-white p-3">
@@ -243,17 +262,36 @@ export default function Home() {
           </Row>
         </Container>
       </MarqueeWrapper>
+
       <BlogWrapper className="py-5">
         <Container fluid="xxl">
           <Row className="g-3 text-center text-md-start">
             <Col xs={12}>
-              <Heading>Our Latest Blogs</Heading>
+              <div className="d-flex  justify-content-between align-items-center">
+                <Heading>Our Latest Blogs</Heading>
+                <div className="slider-controller d-flex">
+                  <div className="slider-button-prev slider-arrow">
+                    <IconButton>
+                      <NavigateBeforeIcon />
+                    </IconButton>
+                  </div>
+                  <div className="slider-button-next slider-arrow">
+                    <IconButton>
+                      <NavigateNextIcon />
+                    </IconButton>
+                  </div>
+                </div>
+              </div>
             </Col>
-            {allBlogs.map((blog, index) => (
-              <Col key={index} xs={12} md={6} lg={3}>
-                <BlogCard blog={blog} />
-              </Col>
-            ))}
+            <Col xs={12}>
+              <ResponsiveSlides>
+                {allBlogs.map((blog, index) => (
+                  <SwiperSlide key={blog?.id}>
+                    <BlogCard blog={blog} />
+                  </SwiperSlide>
+                ))}
+              </ResponsiveSlides>
+            </Col>
           </Row>
         </Container>
       </BlogWrapper>

@@ -10,15 +10,13 @@ import ToggleGrid from "../components/ToggleGrid"
 import FilterSideBarForm from "../components/FilterSideBarForm"
 import SortBarForm from "../components/SortBarForm"
 import {
-  changeProductsPerPage,
+  cloneToFilterProductList,
+  filterProductsListState,
   getProducts,
   getProductsInCategory,
   renderProductsState,
 } from "../app/Redux/products/productSlice"
-import {
-  categories,
-  getAllCategories,
-} from "../app/Redux/Categories/CategorySlice"
+import { categories } from "../app/Redux/Categories/CategorySlice"
 import toCapitalize from "../utils/toCapitalize"
 import RandomProducts from "../components/RandomProducts"
 
@@ -85,9 +83,6 @@ const Wrapper = styled.div`
   padding-top: 150px;
 `
 
-const GridSystem = styled.div`
-  display: grid;
-`
 interface IOutStore {
   currentPage: number
   onPageChange: (event: any, page: number) => void
@@ -100,6 +95,7 @@ export default function OurStore({
 }: IOutStore) {
   useTitle("Our Store")
   const [grid, setGrid] = useState<number>(3)
+  const filterProducts = useAppSelector(filterProductsListState)
   const renderProducts = useAppSelector(renderProductsState)
 
   const dispatch = useAppDispatch()
@@ -110,15 +106,15 @@ export default function OurStore({
     setGrid(value)
   }
 
-  const pageNumber = Math.ceil(renderProducts?.length / 9)
+  const pageNumber = Math.ceil(renderProducts?.length / 6)
 
   return (
     <>
       <Wrapper>
         <Container fluid="xxl" className="py-3">
-          <Row>
+          <Row className="g-3">
             <Col xs={3} style={{ minWidth: "200px", height: "100%" }}>
-              <Row className="g-4">
+              <Row className="g-3">
                 <Col xs={12}>
                   <FilterCard>
                     <FilterTitle>Categories</FilterTitle>
@@ -126,7 +122,6 @@ export default function OurStore({
                       <li>
                         <NavLink
                           onClick={() => {
-                            dispatch(getProducts())
                             onCategoryChange()
                           }}
                           style={({ isActive }) => {
@@ -190,34 +185,38 @@ export default function OurStore({
               </Row>
             </Col>
             <Col xs={9}>
-              <div className="d-flex flex-column justify-content-between h-100">
-                <FilterSortGrid className="mb-4">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center gap-10">
-                      <p className="mb-0 d-block">Sort By:</p>
-                      <SortBarForm />
+              <Row className="g-3">
+                <Col xs={12}>
+                  <FilterSortGrid>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center gap-10">
+                        <p className="mb-0 d-block">Sort By:</p>
+                        <SortBarForm />
+                      </div>
+                      <div className="d-flex align-items-center gap-10">
+                        <p className="mb-0">
+                          {filterProducts?.length} products
+                        </p>
+                        <ToggleGrid grid={grid} onChange={handleChange} />
+                      </div>
                     </div>
-                    <div className="d-flex align-items-center gap-10">
-                      <p className="mb-0">{renderProducts?.length} products</p>
-                      <ToggleGrid grid={grid} onChange={handleChange} />
+                  </FilterSortGrid>
+                </Col>
+                <Outlet />
+                <Col xs={12}>
+                  <FilterSortGrid>
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Pagination
+                        page={currentPage}
+                        count={pageNumber}
+                        variant="outlined"
+                        shape="rounded"
+                        onChange={onPageChange}
+                      />
                     </div>
-                  </div>
-                </FilterSortGrid>
-                <FilterSortGrid className="mb-4  flex-grow-1">
-                  <Outlet />
-                </FilterSortGrid>
-                <FilterSortGrid>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <Pagination
-                      page={currentPage}
-                      count={pageNumber}
-                      variant="outlined"
-                      shape="rounded"
-                      onChange={onPageChange}
-                    />
-                  </div>
-                </FilterSortGrid>
-              </div>
+                  </FilterSortGrid>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Container>

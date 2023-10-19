@@ -1,9 +1,8 @@
-import React from "react"
-import { Card, Button } from "react-bootstrap"
+import { Card } from "react-bootstrap"
 import styled from "styled-components"
-import { IBlogList } from "../data/data"
-import { Link } from "react-router-dom"
 import { IBlogResponse } from "../app/Redux/blogs/blogType"
+import { Button, Link } from "@mui/material"
+import { NavLink } from "react-router-dom"
 
 interface BlogCard {
   blog: IBlogResponse
@@ -14,9 +13,15 @@ const BlogItem = styled(Card)`
   height: 100%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   transition: all 0.25s linear;
-  &:hover {
-    transform: scale(1.02);
+  /* &:hover {
+    transform: scale(0.98);
+  } */
+  overflow: hidden;
+  &:hover img {
+    transition: all 0.5s ease;
+    transform: scale(1.05);
   }
+  cursor: pointer;
 `
 
 const Date = styled(Card.Text)`
@@ -58,16 +63,28 @@ const CardImg = styled(Card.Img)`
 `
 export default function BlogCard({ blog }: BlogCard) {
   return (
-    <BlogItem style={{ width: "100%" }}>
-      <CardImg className="blogCard-img" variant="top" src={blog?.image} />
-      <Card.Body>
-        <Date>{blog?.createdAt}</Date>
-        <Title>{blog?.title}</Title>
-        <Description>{blog?.title}</Description>
-        <a href={blog?.url} className="button px-3 py-2 rounded rounded-pill">
-          Read More
-        </a>
-      </Card.Body>
-    </BlogItem>
+    <NavLink to={`/blogs/${blog?.id}`}>
+      <BlogItem style={{ width: "100%" }}>
+        <CardImg className="blogCard-img" variant="top" src={blog?.image} />
+        <Card.Body>
+          <Date>{blog?.createdAt}</Date>
+          <Title>{blog?.title}</Title>
+          <Description>{blog?.content}</Description>
+          <Link
+            sx={{
+              "&:hover": {
+                color: "warning.main",
+              },
+
+              "&:active": {
+                color: "secondary.main",
+              },
+            }}
+          >
+            Click to read more...
+          </Link>
+        </Card.Body>
+      </BlogItem>
+    </NavLink>
   )
 }

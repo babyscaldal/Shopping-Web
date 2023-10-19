@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom"
-import { Container, Row, Col } from "react-bootstrap"
+import { Link, useParams } from "react-router-dom"
+import { Container, Row, Col, Carousel } from "react-bootstrap"
 import { Rating, ButtonGroup, Button } from "@mui/material"
-import Color from "../components/Colors"
+import CompareIcon from "@mui/icons-material/Compare"
+import FavoriteIcon from "@mui/icons-material/Favorite"
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
 
 import PopularList from "../components/PopularList"
 import images from "../Image/images"
@@ -10,6 +12,8 @@ import ReviewForm from "../components/ReviewForm"
 import CountInputField from "../components/CountInputField"
 import PhotoGallery from "../components/PhotoGallery"
 import { useState } from "react"
+import { useAppSelector } from "../app/hooks"
+import { filterProductsListState } from "../app/Redux/products/productSlice"
 
 const Wrapper = styled.section`
   padding-top: 160px;
@@ -20,7 +24,7 @@ const MainProductDetails = styled.div`
   padding: 30px 20px;
   background-color: white;
   border-radius: 10px;
-  height: 616px;
+  height: 500px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   a {
     font-size: 14px;
@@ -106,28 +110,40 @@ const DescriptionWrapper = styled.div`
 
 function ProductDetail() {
   const [orderedProduct] = useState(true)
+  const filterProducts = useAppSelector(filterProductsListState)
+  const params = useParams()
+  const currentProduct = filterProducts?.find(
+    (product) => product?.id === Number(params.id),
+  )
 
   const closeModal = () => {}
   return (
     <Wrapper>
       <Container fluid="xxl" className="home-wrapper-2">
-        <Row>
+        <Row className="g-3">
           <Col xs={6}>
-            <PhotoGallery />
+            <PhotoGallery product={currentProduct} />
           </Col>
           <Col xs={6}>
             <MainProductDetails className="main-product-details">
               <div className="border-bottom">
-                <Title className="title">
-                  Kids Headphones Bulk 10 Pack Multi Colored For Students
-                </Title>
+                <Title className="title">{currentProduct?.title}</Title>
               </div>
               <div className="border-bottom py-3">
-                <Price className="price">$ 100</Price>
+                <Price className="price text-success">
+                  ${currentProduct?.price}
+                </Price>
                 <div className="d-flex align-items-center gap-10">
-                  <Rating size="small" name="simple-controlled" value={5} />
+                  <Rating
+                    readOnly
+                    size="small"
+                    name="simple-controlled"
+                    value={currentProduct?.rating?.rate}
+                  />
 
-                  <p className="mb-0 t-review">( 2 Reviews )</p>
+                  <p className="mb-0 t-review">
+                    ({currentProduct?.rating?.count} Reviewer)
+                  </p>
                 </div>
                 <ReviewBtn className="review-btn" href="#review">
                   Write a Review
@@ -138,19 +154,23 @@ function ProductDetail() {
                   <ProductHeading className="product-heading">
                     Type :
                   </ProductHeading>
-                  <ProductData className="product-data">Watch</ProductData>
+                  <ProductData className="product-data">
+                    {currentProduct?.category}
+                  </ProductData>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <ProductHeading className="product-heading">
                     Brand :
                   </ProductHeading>
-                  <ProductData className="product-data">Havells</ProductData>
+                  <ProductData className="product-data">APPLE</ProductData>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <ProductHeading className="product-heading">
                     Category :
                   </ProductHeading>
-                  <ProductData className="product-data">Watch</ProductData>
+                  <ProductData className="product-data">
+                    {currentProduct?.category}
+                  </ProductData>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <ProductHeading className="product-heading">
@@ -158,37 +178,7 @@ function ProductDetail() {
                   </ProductHeading>
                   <ProductData className="product-data">Watch</ProductData>
                 </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <ProductHeading className="product-heading">
-                    Availablity :
-                  </ProductHeading>
-                  <ProductData className="product-data">In Stock</ProductData>
-                </div>
-                <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                  <ProductHeading className="product-heading">
-                    Size :
-                  </ProductHeading>
-                  <div className="d-flex flex-wrap gap-15">
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      S
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      M
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XL
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XXL
-                    </span>
-                  </div>
-                </div>
-                <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                  <ProductHeading className="product-heading">
-                    Color :
-                  </ProductHeading>
-                  <Color />
-                </div>
+
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <div className="">
                     <label
@@ -210,22 +200,24 @@ function ProductDetail() {
                       color="primary"
                       aria-label="action"
                     >
-                      <Button color="warning">Buy It Now</Button>
-                      <Button color="info">Add to compare</Button>
-                      <Button color="secondary">Add to Cart</Button>
+                      <Button
+                        startIcon={<AddShoppingCartIcon />}
+                        color="warning"
+                      >
+                        Buy It Now
+                      </Button>
+                      <Button startIcon={<CompareIcon />} color="info">
+                        Add to compare
+                      </Button>
+                      <Button
+                        startIcon={<AddShoppingCartIcon />}
+                        color="secondary"
+                      >
+                        Add to Cart
+                      </Button>
                     </ButtonGroup>
                   </div>
                 </div>
-                {/* <div className="d-flex align-items-center gap-30 ms-5">
-                  <button className="button border-0" type="button">
-                    Add to Cart
-                  </button>
-                  <button className="button border-0" type="button">
-                    Add to compare
-                  </button>
-                  <button className="button signup">Buy It Now</button>
-                </div>
-                <div className="d-flex align-items-center gap-15"></div> */}
               </div>
             </MainProductDetails>
           </Col>
@@ -240,12 +232,7 @@ function ProductDetail() {
             <DescriptionWrapper>
               <H3Style>Description</H3Style>
               <div className="bg-white p-3">
-                <p>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Tenetur nisi similique illum aut perferendis voluptas,
-                  quisquam obcaecati qui nobis officia. Voluptatibus in harum
-                  deleniti labore maxime officia esse eos? Repellat?
-                </p>
+                <p>{currentProduct?.description}</p>
               </div>
             </DescriptionWrapper>
           </Col>

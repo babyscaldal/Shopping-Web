@@ -280,20 +280,19 @@ export const famousList: IFamousList[] = [
   },
 ]
 
-interface ISelectFilter {
+export interface ISelectFilter {
   value: number
   label: string
+  disabled?: boolean
+  selected?: boolean
 }
 
 export const selectFilterData: ISelectFilter[] = [
-  { value: 0, label: "Featured" },
-  { value: 1, label: "Best selling" },
-  { value: 2, label: "Alphabetically, A-Z" },
-  { value: 3, label: "Alphabetically, Z-A" },
-  { value: 4, label: "Price, low to high" },
-  { value: 5, label: "Price, high to low" },
-  { value: 6, label: "Date, old to new" },
-  { value: 7, label: "Date, new to old" },
+  { value: 0, label: "Features", disabled: true, selected: true },
+  { value: 1, label: "Alphabetically, A-Z" },
+  { value: 2, label: "Alphabetically, Z-A" },
+  { value: 3, label: "Price, low to high" },
+  { value: 4, label: "Price, high to low" },
 ]
 
 export const featureImages: string[] = [
