@@ -4,6 +4,8 @@ import Fade from "@mui/material/Fade"
 import Slide, { SlideProps } from "@mui/material/Slide"
 import { TransitionProps } from "@mui/material/transitions"
 import { Alert } from "@mui/material"
+import Tippy from "@tippyjs/react/headless"
+import "tippy.js/dist/tippy.css"
 
 import {
   OutlinedInput,
@@ -11,28 +13,48 @@ import {
   IconButton,
   FormControl,
 } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
+import styled from "styled-components"
+import SearchResultItem from "./SearchResultItem"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { resetToInit, searchProducts } from "../app/Redux/products/productSlice"
+import useDebounce from "../hooks/useDebounce"
 
-interface ICustomInputField {
+interface ICustomSearchBarField {
   id: string
   placeholder?: string
   children?: any
   type?: string
   name: string
+  showResult: boolean
+  onHideResult?: () => void
+  onShowResult?: () => void
 }
 
 function SlideTransition(props: SlideProps) {
   return <Slide {...props} direction="up" />
 }
 
-export default function CustomOutLineInputField({
+const PopoverContent = styled.div`
+  padding: 10px 0;
+  background: #f7dfdf;
+  width: 450px;
+  border-radius: 10px;
+  overflow: auto;
+  height: 380px;
+`
+
+export default function CustomSearchBarField({
   name,
+  showResult,
   children,
   placeholder,
   id,
   type = "text",
-}: ICustomInputField) {
+  onShowResult,
+  onHideResult,
+}: ICustomSearchBarField) {
   const [state, setState] = React.useState<{
     open: boolean
     Transition: React.ComponentType<
@@ -71,6 +93,12 @@ export default function CustomOutLineInputField({
 
   const [iconColor, setColor] = useState("")
 
+  const dispatch = useAppDispatch()
+
+  const searchResultProducts = useAppSelector(
+    (state) => state?.product?.searchResultProducts,
+  )
+
   return (
     <Controller
       name={name}
@@ -79,8 +107,31 @@ export default function CustomOutLineInputField({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => {
+        const debounceValue = useDebounce(value.trim(), 500)
+
+        useEffect(() => {
+          if (!debounceValue.trim()) {
+            dispatch(resetToInit())
+            return
+          }
+          dispatch(searchProducts(debounceValue))
+        }, [debounceValue])
+
         return (
-          <>
+          <Tippy
+            visible={showResult && !!searchResultProducts.length}
+            interactive
+            placement="bottom-end"
+            render={(props) => (
+              <div tabIndex={-1} {...props}>
+                <PopoverContent>
+                  {searchResultProducts?.map((product) => (
+                    <SearchResultItem key={product.id} product={product} />
+                  ))}
+                </PopoverContent>
+              </div>
+            )}
+          >
             <FormControl
               fullWidth
               size="small"
@@ -96,9 +147,15 @@ export default function CustomOutLineInputField({
                 onBlur={() => {
                   setColor("")
                   onBlur()
+                  onHideResult && onHideResult()
                 }}
-                onChange={onChange}
-                onFocus={() => setColor("warning.main")}
+                onChange={(e) => {
+                  onChange(e.target.value)
+                }}
+                onFocus={() => {
+                  setColor("warning.main")
+                  onShowResult && onShowResult()
+                }}
                 value={value}
                 id={id}
                 type={type}
@@ -139,7 +196,7 @@ export default function CustomOutLineInputField({
                 </Snackbar>
               )}
             </FormControl>
-          </>
+          </Tippy>
         )
       }}
     />

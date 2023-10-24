@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import CustomCheckbox from "./CustomCheckbox"
 import { rateOption } from "../data/checkboxData"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -8,7 +8,11 @@ import { Button } from "@mui/material"
 import { SubTitle } from "../pages/OurStore"
 import CustomTextField from "./CustomTextField"
 import { useAppDispatch } from "../app/hooks"
-import { filterProductsByRate } from "../app/Redux/products/productSlice"
+import {
+  filterProductsByPrice,
+  filterProductsByRate,
+} from "../app/Redux/products/productSlice"
+import { useEffect } from "react"
 
 const numberRegex = /^[0-9]+$/
 
@@ -33,9 +37,10 @@ export default function FilterSideBarForm() {
   const form = useForm<IFilterSideBarFormValue>({
     defaultValues: { rate: [], minPrice: "", maxPrice: "" },
     resolver: zodResolver(priceValueSchema),
+    mode: "all",
   })
 
-  const { handleSubmit, reset } = form
+  const { handleSubmit, reset, control } = form
 
   const onSubmit = (data: IFilterSideBarFormValue) => {
     console.log(data)
@@ -44,6 +49,16 @@ export default function FilterSideBarForm() {
   const handleCheckboxChange = (value: number[]) => {
     dispatch(filterProductsByRate(value))
   }
+
+  const minPrice = Number(useWatch({ control, name: "minPrice" }))
+  const maxPrice = Number(useWatch({ control, name: "maxPrice" }))
+
+  useEffect(() => {
+    if (!!minPrice && !!maxPrice) {
+      dispatch(filterProductsByPrice([minPrice, maxPrice]))
+    }
+  }, [maxPrice, minPrice])
+
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>

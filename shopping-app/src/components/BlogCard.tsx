@@ -2,7 +2,7 @@ import { Card } from "react-bootstrap"
 import styled from "styled-components"
 import { IBlogResponse } from "../app/Redux/blogs/blogType"
 import { Button, Link } from "@mui/material"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 interface BlogCard {
   blog: IBlogResponse
@@ -62,29 +62,33 @@ const CardImg = styled(Card.Img)`
   object-position: center;
 `
 export default function BlogCard({ blog }: BlogCard) {
+  const navigate = useNavigate()
   return (
-    <NavLink to={`/blogs/${blog?.id}`}>
-      <BlogItem style={{ width: "100%" }}>
-        <CardImg className="blogCard-img" variant="top" src={blog?.image} />
-        <Card.Body>
-          <Date>{blog?.createdAt}</Date>
-          <Title>{blog?.title}</Title>
-          <Description>{blog?.content}</Description>
-          <Link
-            sx={{
-              "&:hover": {
-                color: "warning.main",
-              },
+    // <NavLink to={`/blogs/${blog?.id}`}>
+    <BlogItem
+      onClick={() => navigate(`/blogs/${blog?.id}`)}
+      style={{ width: "100%" }}
+    >
+      <CardImg className="blogCard-img" variant="top" src={blog?.image} />
+      <Card.Body>
+        <Date>{blog?.createdAt}</Date>
+        <Title>{blog?.title}</Title>
+        <Description>{blog?.content}</Description>
+        <Link
+          sx={{
+            "&:hover": {
+              color: "warning.main",
+            },
 
-              "&:active": {
-                color: "secondary.main",
-              },
-            }}
-          >
-            Click to read more...
-          </Link>
-        </Card.Body>
-      </BlogItem>
-    </NavLink>
+            "&:active": {
+              color: "secondary.main",
+            },
+          }}
+        >
+          Click to read more...
+        </Link>
+      </Card.Body>
+    </BlogItem>
+    // </NavLink>
   )
 }

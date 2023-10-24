@@ -4,8 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "react-bootstrap"
 import CustomTextAreaField from "./CustomTextAreaField"
 import CustomTextField from "./CustomTextField"
+import { useAppDispatch } from "../app/hooks"
+import { postContactInfo } from "../app/Redux/contacts/contactSlice"
 
 const phoneNumberRegex = /^\d{10}$/
+
+interface IContactFormValue {
+  name: string
+  email: string
+  tel: string
+  comments: string
+}
 
 export const contactFormValueSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -20,16 +29,23 @@ export const contactFormValueSchema = z.object({
 })
 
 export default function ContactForm() {
-  const form = useForm({
+  const form = useForm<IContactFormValue>({
     defaultValues: { name: "", email: "", tel: "", comments: "" },
     resolver: zodResolver(contactFormValueSchema),
     mode: "onSubmit",
   })
 
-  const { handleSubmit, reset } = form
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = form
 
-  const onSubmit = (data: any) => {
+  const dispatch = useAppDispatch()
+
+  const onSubmit = (data: IContactFormValue) => {
     console.log(data)
+    dispatch(postContactInfo(data))
     reset()
   }
 
@@ -64,7 +80,11 @@ export default function ContactForm() {
             id="contact-form-comments"
             name={"comments"}
           />
-          <Button type="submit" className="button border-0">
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+            className="button border-0"
+          >
             Submit
           </Button>
         </div>

@@ -38,6 +38,8 @@ import TermAndCondition from "./pages/TermAndCondition"
 import Home from "./pages/Home"
 import Compare from "./pages/Compare"
 import { getAllBlogs } from "./app/Redux/blogs/blogSlice"
+import Test from "./pages/Test"
+import SearchProductsList from "./pages/SearchProductsList"
 
 function App() {
   const renderProducts = useAppSelector(renderProductsState)
@@ -107,11 +109,11 @@ function App() {
               },
               {
                 path: "all",
-                element: <ProductsList listItem={filterProducts} />,
+                element: <ProductsList listItem={displayedProducts} />,
               },
               {
                 path: ":category",
-                element: <ProductsList listItem={filterProducts} />,
+                element: <ProductsList listItem={displayedProducts} />,
               },
             ],
           },
@@ -175,6 +177,11 @@ function App() {
             path: "checkout",
             element: <Checkout />,
           },
+          {
+            path: "search",
+            element: <SearchProductsList />,
+          },
+          { path: "test", element: <Test /> },
         ],
       },
     ])

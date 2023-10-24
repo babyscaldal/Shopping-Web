@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { Carousel, Container, Row } from "react-bootstrap"
+import { Carousel } from "react-bootstrap"
 import styled from "styled-components"
-import { IProductResponse } from "../app/Redux/products/productType"
-import { IconButton } from "@mui/material"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
+
+import { IProductResponse } from "../app/Redux/products/productType"
 
 interface IProductGallery {
   product?: IProductResponse
@@ -42,6 +42,7 @@ export default function ProductGallery({ product }: IProductGallery) {
             <img
               style={{
                 borderRadius: "10px",
+                objectFit: "contain",
               }}
               width="100%"
               height="100%"

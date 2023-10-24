@@ -2,11 +2,9 @@ import { Link, useParams } from "react-router-dom"
 import { Container, Row, Col, Carousel } from "react-bootstrap"
 import { Rating, ButtonGroup, Button } from "@mui/material"
 import CompareIcon from "@mui/icons-material/Compare"
-import FavoriteIcon from "@mui/icons-material/Favorite"
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
 
 import PopularList from "../components/PopularList"
-import images from "../Image/images"
 import styled from "styled-components"
 import ReviewForm from "../components/ReviewForm"
 import CountInputField from "../components/CountInputField"
@@ -116,7 +114,6 @@ function ProductDetail() {
     (product) => product?.id === Number(params.id),
   )
 
-  const closeModal = () => {}
   return (
     <Wrapper>
       <Container fluid="xxl" className="home-wrapper-2">
@@ -266,14 +263,7 @@ function ProductDetail() {
                 <ReviewBox className="review">
                   <div className="d-flex gap-10 align-items-center">
                     <h6 className="mb-0">Son Nguyen</h6>
-                    <Rating
-                      size="small"
-                      name="simple-controlled"
-                      value={5}
-                      // onChange={(event, newValue) => {
-                      //   setValue(newValue)
-                      // }}
-                    />
+                    <Rating size="small" name="simple-controlled" value={5} />
                   </div>
                   <ReviewContent className="mt-3">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -289,65 +279,6 @@ function ProductDetail() {
         </Row>
       </Container>
       <PopularList />
-
-      <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        // tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered ">
-          <div className="modal-content">
-            <div className="modal-header py-0 border-0">
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body py-0">
-              <div className="d-flex align-items-center">
-                <div className="flex-grow-1 w-50">
-                  <img
-                    src={images.smartWatchs}
-                    className="img-fluid"
-                    alt="product imgae"
-                  />
-                </div>
-                <div className="d-flex flex-column flex-grow-1 w-50">
-                  <h6 className="mb-3">Apple Watch</h6>
-                  <p className="mb-1">Quantity: asgfd</p>
-                  <p className="mb-1">Color: asgfd</p>
-                  <p className="mb-1">Size: asgfd</p>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer border-0 py-0 justify-content-center gap-30">
-              <button type="button" className="button" data-bs-dismiss="modal">
-                View My Cart
-              </button>
-              <button type="button" className="button signup">
-                Checkout
-              </button>
-            </div>
-            <div className="d-flex justify-content-center py-3">
-              <Link
-                className="text-dark"
-                to="/product"
-                onClick={() => {
-                  closeModal()
-                }}
-              >
-                Continue To Shopping
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
     </Wrapper>
   )
 }

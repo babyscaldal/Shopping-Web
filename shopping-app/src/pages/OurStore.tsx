@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
 import { Pagination } from "@mui/material"
@@ -10,11 +10,9 @@ import ToggleGrid from "../components/ToggleGrid"
 import FilterSideBarForm from "../components/FilterSideBarForm"
 import SortBarForm from "../components/SortBarForm"
 import {
-  cloneToFilterProductList,
   filterProductsListState,
   getProducts,
   getProductsInCategory,
-  renderProductsState,
 } from "../app/Redux/products/productSlice"
 import { categories } from "../app/Redux/Categories/CategorySlice"
 import toCapitalize from "../utils/toCapitalize"
@@ -83,11 +81,21 @@ const Wrapper = styled.div`
   padding-top: 150px;
 `
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-rows: 64px auto 64px;
+  grid-gap: 16px;
+  height: 1210px;
+`
+
+const StyledGridItem = styled.div``
+
 interface IOutStore {
   currentPage: number
   onPageChange: (event: any, page: number) => void
   onCategoryChange: () => void
 }
+
 export default function OurStore({
   currentPage,
   onPageChange,
@@ -96,7 +104,6 @@ export default function OurStore({
   useTitle("Our Store")
   const [grid, setGrid] = useState<number>(3)
   const filterProducts = useAppSelector(filterProductsListState)
-  const renderProducts = useAppSelector(renderProductsState)
 
   const dispatch = useAppDispatch()
 
@@ -106,7 +113,7 @@ export default function OurStore({
     setGrid(value)
   }
 
-  const pageNumber = Math.ceil(renderProducts?.length / 6)
+  const pageNumber = Math.ceil(filterProducts?.length / 6)
 
   return (
     <>
@@ -123,6 +130,7 @@ export default function OurStore({
                         <NavLink
                           onClick={() => {
                             onCategoryChange()
+                            dispatch(getProducts())
                           }}
                           style={({ isActive }) => {
                             return {
@@ -185,8 +193,8 @@ export default function OurStore({
               </Row>
             </Col>
             <Col xs={9}>
-              <Row className="g-3">
-                <Col xs={12}>
+              <GridContainer>
+                <StyledGridItem>
                   <FilterSortGrid>
                     <div className="d-flex justify-content-between align-items-center">
                       <div className="d-flex align-items-center gap-10">
@@ -201,9 +209,11 @@ export default function OurStore({
                       </div>
                     </div>
                   </FilterSortGrid>
-                </Col>
-                <Outlet />
-                <Col xs={12}>
+                </StyledGridItem>
+                <StyledGridItem>
+                  <Outlet />
+                </StyledGridItem>
+                <StyledGridItem>
                   <FilterSortGrid>
                     <div className="d-flex justify-content-center align-items-center">
                       <Pagination
@@ -215,8 +225,8 @@ export default function OurStore({
                       />
                     </div>
                   </FilterSortGrid>
-                </Col>
-              </Row>
+                </StyledGridItem>
+              </GridContainer>
             </Col>
           </Row>
         </Container>

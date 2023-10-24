@@ -2,7 +2,7 @@ import { useForm, FormProvider } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import AddAlertIcon from "@mui/icons-material/AddAlert"
-import CustomOutLineInputField from "./CustomOutLineInputField"
+import CustomSubscribeField from "./CustomSubscribeField"
 
 export const subscribeValueSchema = z.object({
   subscribe: z
@@ -28,14 +28,14 @@ export default function SubscribeBarForm() {
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <CustomOutLineInputField
+        <CustomSubscribeField
           placeholder="Your Email Address"
           id="subscribe"
           name={"subscribe"}
           type="email"
         >
           <AddAlertIcon />
-        </CustomOutLineInputField>
+        </CustomSubscribeField>
       </form>
     </FormProvider>
   )

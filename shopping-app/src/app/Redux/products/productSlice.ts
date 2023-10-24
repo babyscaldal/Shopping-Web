@@ -8,6 +8,7 @@ interface IProductState {
   allProduct: IProductResponse[]
   renderProducts: IProductResponse[]
   productsPerPage: IProductResponse[]
+  searchResultProducts: IProductResponse[]
   isError: boolean
   isSuccess: boolean
   isLoading: boolean
@@ -53,6 +54,18 @@ export const getProductsInCategory = createAsyncThunk(
   },
 )
 
+export const searchProducts = createAsyncThunk(
+  "product/searchProducts",
+  async (searchValue: string, thunkAPI) => {
+    try {
+      const response = await productServices.searchProducts(searchValue)
+      return response.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  },
+)
+
 const getWishlistFromLocalStorage = localStorage.getItem("wishList")
 
 const currentWishList = getWishlistFromLocalStorage
@@ -70,6 +83,7 @@ const productState: IProductState = {
   isError: false,
   message: null,
   popularList: [],
+  searchResultProducts: [],
 }
 
 export const productSlice = createSlice({
@@ -91,7 +105,6 @@ export const productSlice = createSlice({
       state,
       action: PayloadAction<IProductResponse[]>,
     ) => {
-      // console.log(action.payload)
       state.productsPerPage = action.payload
     },
 
@@ -140,7 +153,23 @@ export const productSlice = createSlice({
       }
     },
 
-    // filterProductBy,
+    filterProductsByPrice: (state, action: PayloadAction<number[]>) => {
+      state.filterProductsList = state.renderProducts.filter((product) => {
+        return (
+          product.price > action.payload[0] && product.price < action.payload[1]
+        )
+      })
+    },
+
+    // filterProductsByMaxPrice: (state, action: PayloadAction<number>) => {
+    //   state.filterProductsList = state.renderProducts.filter((product) => {
+    //     return product.price < action.payload
+    //   })
+    // },
+
+    resetToInit: (state) => {
+      state.searchResultProducts = []
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -199,6 +228,25 @@ export const productSlice = createSlice({
         state.isError = true
         state.message = action.error
       })
+      .addCase(searchProducts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(
+        searchProducts.fulfilled,
+        (state, action: PayloadAction<IProductResponse[]>) => {
+          state.renderProducts = action.payload
+          state.searchResultProducts = action.payload
+          state.isLoading = false
+          state.isSuccess = true
+          state.isError = false
+        },
+      )
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = true
+        state.message = action.error
+      })
   },
 })
 
@@ -215,8 +263,15 @@ export const filterProductsListState = (state: RootState) =>
 export const productPerPageState = (state: RootState) =>
   state?.product?.productsPerPage
 
+export const searchProductsState = (state: RootState) =>
+  state?.product?.renderProducts
+
+export const resetToInitState = (state: RootState) =>
+  state?.product?.renderProducts
+
 export const isLoadingState = (state: RootState) => state?.product?.isLoading
 export const {
+  resetToInit,
   addToWishList,
   changeProductsPerPage,
   sortProductsByAlphabetAZ,
@@ -225,5 +280,6 @@ export const {
   sortProductsByPriceLow,
   filterProductsByRate,
   cloneToFilterProductList,
+  filterProductsByPrice,
 } = productSlice.actions
 export default productSlice.reducer

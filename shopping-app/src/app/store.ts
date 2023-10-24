@@ -4,6 +4,7 @@ import authReducer from "./Redux/users/userSlice"
 import productReducer from "./Redux/products/productSlice"
 import categoryReducer from "./Redux/Categories/CategorySlice"
 import blogsReducer from "./Redux/blogs/blogSlice"
+import contactReducer from "./Redux/contacts/contactSlice"
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     product: productReducer,
     category: categoryReducer,
     blog: blogsReducer,
+    contact: contactReducer,
   },
 })
 

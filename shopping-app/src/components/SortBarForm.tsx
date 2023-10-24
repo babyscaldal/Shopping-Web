@@ -1,17 +1,15 @@
 import { useForm, FormProvider } from "react-hook-form"
 import { MenuItem } from "@mui/material"
-import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { useAppDispatch } from "../app/hooks"
 
 import CustomSelectField from "./CustomSelectField"
 import { selectFilterData } from "../data/data"
 import {
-  renderProductsState,
   sortProductsByAlphabetAZ,
   sortProductsByAlphabetZA,
   sortProductsByPriceHigh,
   sortProductsByPriceLow,
 } from "../app/Redux/products/productSlice"
-import { useEffect } from "react"
 
 interface selectFormValue {
   sortValue: number
@@ -19,7 +17,6 @@ interface selectFormValue {
 
 export default function SortBarForm() {
   const dispatch = useAppDispatch()
-  // const renderProducts = useAppSelector(renderProductsState)
 
   const form = useForm<selectFormValue>({
     defaultValues: { sortValue: 0 },

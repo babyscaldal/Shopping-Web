@@ -1,5 +1,6 @@
 import { Col, Container, Dropdown, Row } from "react-bootstrap"
 import { NavLink, useNavigate } from "react-router-dom"
+
 import styled from "styled-components"
 import images from "../Image/images"
 import { navOption } from "../data/data"
@@ -14,7 +15,10 @@ import UserLoggedInMenu from "./UserLoggedInMenu"
 import { useState } from "react"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { categories } from "../app/Redux/Categories/CategorySlice"
-import { getProductsInCategory } from "../app/Redux/products/productSlice"
+import {
+  getProducts,
+  getProductsInCategory,
+} from "../app/Redux/products/productSlice"
 
 const HeaderUpperContainer = styled.div`
   background: var(--color-131921);
@@ -223,10 +227,15 @@ export default function Header() {
                     ))}
                   </DropdownMenu>
                 </Dropdown>
-                <MenuLink className="">
+                <MenuLink className="flex-grow-1">
                   <div className="d-flex align-items-center gap-15">
                     {navOption.map((link, index) => (
                       <StyledNavLink
+                        onClick={() => {
+                          if (link?.title === "Our Store") {
+                            dispatch(getProducts())
+                          }
+                        }}
                         key={index}
                         to={link.to}
                         style={({ isActive }) => {
@@ -243,7 +252,7 @@ export default function Header() {
                     ))}
                   </div>
                 </MenuLink>
-                <div style={{ flexGrow: 1 }}>
+                <div>
                   <SearchBarForm />
                 </div>
               </MenuBottom>

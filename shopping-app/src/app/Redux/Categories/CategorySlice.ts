@@ -59,5 +59,5 @@ export const categorySlice = createSlice({
 })
 
 export const categories = (state: RootState) => state?.category?.categories
-export const isLoadingState = (state: RootState) => state.product.isLoading
+export const isLoadingState = (state: RootState) => state?.product?.isLoading
 export default categorySlice.reducer

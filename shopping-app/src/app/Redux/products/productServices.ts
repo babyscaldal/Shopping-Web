@@ -19,6 +19,13 @@ const productServices = {
     const response = await axiosClient.get(GET_POPULAR_PRODUCT_URL)
     return response
   },
+  searchProducts: async (searchValue: string) => {
+    const SEARCH_PRODUCT_URL = `http://localhost:3000/products?q=${encodeURIComponent(
+      searchValue,
+    )}`
+    const response = await axiosClient.get(SEARCH_PRODUCT_URL)
+    return response
+  },
 }
 
 export default productServices

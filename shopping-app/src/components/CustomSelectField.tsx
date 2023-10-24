@@ -1,13 +1,6 @@
 import { FormControl, Select } from "@mui/material"
 import { useEffect } from "react"
 import { Controller, useFormContext } from "react-hook-form"
-import {
-  sortProductsByAlphabetAZ,
-  sortProductsByAlphabetZA,
-  sortProductsByPriceHigh,
-  sortProductsByPriceLow,
-} from "../app/Redux/products/productSlice"
-import { useAppDispatch } from "../app/hooks"
 
 interface ICustomSelectField {
   label?: string
@@ -36,7 +29,7 @@ export default function CustomSelectField({
         }, [value])
         console.log(value)
         return (
-          <FormControl fullWidth size="small">
+          <FormControl size="small">
             <Select
               sx={{ width: width ? width : null, backgroundColor: "#fff" }}
               value={value}
