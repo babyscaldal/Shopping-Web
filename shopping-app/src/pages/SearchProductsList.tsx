@@ -9,8 +9,8 @@ import {
   filterProductsListState,
   isLoadingState,
 } from "../app/Redux/products/productSlice"
-import ProductCard from "../components/ProductCard"
 import SkeletonItemCard from "../components/ItemSkeleton"
+import ProductCard from "../components/ProductCard"
 
 const Wrapper = styled.section`
   padding-top: 160px;

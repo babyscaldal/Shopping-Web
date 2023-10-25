@@ -1,7 +1,7 @@
 import Image from "./Image"
 import images from "../Image/images"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { IProductResponse } from "../app/Redux/products/productType"
 
 const ItemWrapper = styled.div`
@@ -35,15 +35,19 @@ interface ISearchResultItem {
 }
 
 export default function SearchResultItem({ product }: ISearchResultItem) {
+  const navigate = useNavigate()
   return (
-    <Link to="">
-      <ItemWrapper className="d-flex align-items-center gap-4">
-        <Image src={product?.image} width="70px" height="70px" />
-        <div>
-          <Title>{product?.title}</Title>
-          <Price className="text-success">${product?.price}</Price>
-        </div>
-      </ItemWrapper>
-    </Link>
+    <ItemWrapper
+      className="d-flex align-items-center gap-4"
+      onClick={() => {
+        navigate(`/products/${product?.category}/${product?.id}`)
+      }}
+    >
+      <Image src={product?.image} width="70px" height="70px" />
+      <div>
+        <Title>{product?.title}</Title>
+        <Price className="text-success">${product?.price}</Price>
+      </div>
+    </ItemWrapper>
   )
 }

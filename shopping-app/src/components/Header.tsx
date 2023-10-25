@@ -1,21 +1,23 @@
 import { Col, Container, Dropdown, Row } from "react-bootstrap"
 import { NavLink, useNavigate } from "react-router-dom"
-
+import { Badge } from "@mui/material"
 import styled from "styled-components"
-import images from "../Image/images"
-import { navOption } from "../data/data"
-import SearchBarForm from "./SearchBarForm"
-import { Badge, IconButton } from "@mui/material"
 import CompareIcon from "@mui/icons-material/Compare"
 import PersonIcon from "@mui/icons-material/Person"
 import FavoriteIcon from "@mui/icons-material/Favorite"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
-import { AppBar } from "@mui/material"
-import UserLoggedInMenu from "./UserLoggedInMenu"
 import { useState } from "react"
+import { AppBar } from "@mui/material"
+
+import images from "../Image/images"
+import { navOption } from "../data/data"
+import SearchBarForm from "./SearchBarForm"
+import UserLoggedInMenu from "./UserLoggedInMenu"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { categories } from "../app/Redux/Categories/CategorySlice"
 import {
+  compareProductsState,
+  favoriteProductsState,
   getProducts,
   getProductsInCategory,
 } from "../app/Redux/products/productSlice"
@@ -92,6 +94,9 @@ export default function Header() {
   const navigate = useNavigate()
   const [isLogin] = useState(true)
   const categoriesList = useAppSelector(categories)
+  const favoriteProducts = useAppSelector(favoriteProductsState)
+  const compareProducts = useAppSelector(compareProductsState)
+
   return (
     <AppBar position="fixed" sx={{ boxShadow: "none" }}>
       <HeaderUpperContainer className="py-3">
@@ -119,7 +124,16 @@ export default function Header() {
                     to="compare"
                     className="d-flex align-items-center gap-10"
                   >
-                    <CompareIcon />
+                    <Badge
+                      badgeContent={compareProducts?.length}
+                      color="warning"
+                      anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                    >
+                      <CompareIcon />
+                    </Badge>
                     <p className="mb-0">Compare</p>
                   </NavLink>
                 </NavItemWrapper>
@@ -137,7 +151,7 @@ export default function Header() {
                     className="d-flex align-items-center gap-10"
                   >
                     <Badge
-                      badgeContent={50}
+                      badgeContent={favoriteProducts?.length}
                       color="warning"
                       anchorOrigin={{
                         vertical: "top",

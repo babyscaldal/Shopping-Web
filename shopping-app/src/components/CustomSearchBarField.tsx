@@ -119,6 +119,9 @@ export default function CustomSearchBarField({
 
         return (
           <Tippy
+            onClickOutside={() => {
+              onHideResult && onHideResult()
+            }}
             visible={showResult && !!searchResultProducts.length}
             interactive
             placement="bottom-end"
@@ -147,7 +150,6 @@ export default function CustomSearchBarField({
                 onBlur={() => {
                   setColor("")
                   onBlur()
-                  onHideResult && onHideResult()
                 }}
                 onChange={(e) => {
                   onChange(e.target.value)

@@ -13,9 +13,10 @@ interface IProductState {
   isSuccess: boolean
   isLoading: boolean
   message: any
-  wishList: IProductResponse[]
   popularList: IProductResponse[]
   filterProductsList: IProductResponse[]
+  favoriteProducts: IProductResponse[]
+  compareProducts: IProductResponse[]
 }
 
 export const getProducts = createAsyncThunk(
@@ -66,14 +67,17 @@ export const searchProducts = createAsyncThunk(
   },
 )
 
-const getWishlistFromLocalStorage = localStorage.getItem("wishList")
+const favoriteListInLocalStorage = localStorage.getItem("favoriteList")
+const favoriteListInitState: IProductResponse[] = favoriteListInLocalStorage
+  ? JSON.parse(favoriteListInLocalStorage)
+  : []
 
-const currentWishList = getWishlistFromLocalStorage
-  ? JSON.parse(getWishlistFromLocalStorage)
-  : null
+const compareListInLocalStorage = localStorage.getItem("compareList")
+const compareListInitState: IProductResponse[] = compareListInLocalStorage
+  ? JSON.parse(compareListInLocalStorage)
+  : []
 
-const productState: IProductState = {
-  wishList: currentWishList ? currentWishList : [],
+export const productState: IProductState = {
   renderProducts: [],
   filterProductsList: [],
   allProduct: [],
@@ -84,23 +88,14 @@ const productState: IProductState = {
   message: null,
   popularList: [],
   searchResultProducts: [],
+  favoriteProducts: favoriteListInitState,
+  compareProducts: compareListInitState,
 }
 
 export const productSlice = createSlice({
   name: "product",
   initialState: productState,
   reducers: {
-    addToWishList: (state, action: PayloadAction<IProductResponse>) => {
-      const isAdded = state.wishList.some(
-        (item) => item.id === action.payload.id,
-      )
-      if (isAdded) {
-        state.wishList = state.wishList
-      } else {
-        state.wishList.push(action.payload)
-      }
-    },
-
     changeProductsPerPage: (
       state,
       action: PayloadAction<IProductResponse[]>,
@@ -161,14 +156,48 @@ export const productSlice = createSlice({
       })
     },
 
-    // filterProductsByMaxPrice: (state, action: PayloadAction<number>) => {
-    //   state.filterProductsList = state.renderProducts.filter((product) => {
-    //     return product.price < action.payload
-    //   })
-    // },
-
     resetToInit: (state) => {
       state.searchResultProducts = []
+    },
+
+    addProductsToFavoriteList: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      const isAdded = state.favoriteProducts.some(
+        (product) => product.id === action.payload.id,
+      )
+      if (isAdded) return
+      state.favoriteProducts = [...state.favoriteProducts, action.payload]
+    },
+
+    removeProductsFromFavoriteList: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      state.favoriteProducts = state.favoriteProducts.filter(
+        (product) => product.id !== action.payload.id,
+      )
+    },
+
+    addProductsToCompareList: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      const isAdded = state.compareProducts.some(
+        (product) => product.id === action.payload.id,
+      )
+      if (isAdded) return
+      state.compareProducts = [...state.compareProducts, action.payload]
+    },
+
+    removeProductsFromCompareList: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      state.compareProducts = state.compareProducts.filter(
+        (product) => product.id !== action.payload.id,
+      )
     },
   },
   extraReducers: (builder) => {
@@ -269,16 +298,26 @@ export const searchProductsState = (state: RootState) =>
 export const resetToInitState = (state: RootState) =>
   state?.product?.renderProducts
 
+export const favoriteProductsState = (state: RootState) =>
+  state?.product?.favoriteProducts
+
+export const compareProductsState = (state: RootState) =>
+  state?.product?.compareProducts
+
 export const isLoadingState = (state: RootState) => state?.product?.isLoading
 export const {
+  addProductsToFavoriteList,
+  removeProductsFromFavoriteList,
+  addProductsToCompareList,
+  removeProductsFromCompareList,
   resetToInit,
-  addToWishList,
   changeProductsPerPage,
   sortProductsByAlphabetAZ,
   sortProductsByAlphabetZA,
   sortProductsByPriceHigh,
   sortProductsByPriceLow,
   filterProductsByRate,
+
   cloneToFilterProductList,
   filterProductsByPrice,
 } = productSlice.actions

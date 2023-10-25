@@ -247,6 +247,7 @@ export interface IFamousList {
   productname: string
   description: string
   to: string
+  categoryId: number
 }
 
 export const famousList: IFamousList[] = [
@@ -256,6 +257,7 @@ export const famousList: IFamousList[] = [
     productname: "Apple Watch Collection",
     description: "From $249",
     to: "/products/Apple%20Watch",
+    categoryId: 4,
   },
   {
     image: images.famous2,
@@ -263,20 +265,23 @@ export const famousList: IFamousList[] = [
     productname: "MacBook Collection",
     description: "From $249",
     to: "/products/Mac",
+    categoryId: 1,
   },
   {
     image: images.famous3,
     detail: "iPhone",
     productname: "iPhone Collection",
     description: "From $429 ",
-    to: "",
+    to: "/products/iPhone",
+    categoryId: 2,
   },
   {
     image: images.famous4,
     detail: "Home Speaker",
     productname: "HomePod Collection",
     description: "From $699",
-    to: "",
+    to: "/products/HomePod",
+    categoryId: 6,
   },
 ]
 

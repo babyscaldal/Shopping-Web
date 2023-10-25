@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import { IFamousList } from "../data/data"
 import { Link } from "react-router-dom"
+import { useAppDispatch } from "../app/hooks"
+import { getProductsInCategory } from "../app/Redux/products/productSlice"
 
 const FamousContent = styled.div`
   top: 10%;
@@ -33,10 +35,14 @@ export default function FamousProductItem({
   famous,
   index,
 }: IFamousProductItem) {
-  const { detail, description, image, productname, to } = famous
+  const { detail, description, image, productname, to, categoryId } = famous
+  const dispatch = useAppDispatch()
   return (
     <Link to={to}>
-      <FamousItem className="famous-card position-relative rounded-3">
+      <FamousItem
+        className="famous-card position-relative rounded-3"
+        onClick={() => dispatch(getProductsInCategory(categoryId))}
+      >
         <img src={image} className="img-fluid rounded rounded-3" alt="famous" />
         <FamousContent className="position-absolute">
           <h5 className={index === 0 ? "text-white" : "text-dark"}>{detail}</h5>

@@ -4,6 +4,7 @@ import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
+import "tippy.js/dist/tippy.css"
 
 import GlobalStyles from "./style/GlobalStyle"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
@@ -12,6 +13,8 @@ import ProductsList from "./components/ProductsList"
 import { useEffect, useMemo, useState } from "react"
 import {
   cloneToFilterProductList,
+  compareProductsState,
+  favoriteProductsState,
   filterProductsListState,
   getPopularProducts,
   getProducts,
@@ -186,6 +189,17 @@ function App() {
       },
     ])
   }, [handleCategoryChange, displayedProducts, currentPage, handlePageChange])
+
+  const favoriteProducts = useAppSelector(favoriteProductsState)
+  const compareProducts = useAppSelector(compareProductsState)
+
+  useEffect(() => {
+    localStorage.setItem("favoriteList", JSON.stringify(favoriteProducts))
+  }, [favoriteProducts])
+
+  useEffect(() => {
+    localStorage.setItem("compareList", JSON.stringify(compareProducts))
+  }, [compareProducts])
 
   return (
     <GlobalStyles>

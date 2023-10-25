@@ -4,15 +4,23 @@ import styled, { keyframes } from "styled-components"
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
 import Favorite from "@mui/icons-material/Favorite"
 import { Checkbox, IconButton } from "@mui/material"
-import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined"
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined"
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { IProductResponse } from "../app/Redux/products/productType"
-import { useAppSelector } from "../app/hooks"
-import { isLoadingState } from "../app/Redux/products/productSlice"
-import SkeletonItem from "./ItemSkeleton"
-import SkeletonItemCard from "./ItemSkeleton"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import Tippy from "@tippyjs/react"
+
+import CheckIcon from "@mui/icons-material/Check"
+import CompareIcon from "@mui/icons-material/Compare"
+import {
+  addProductsToCompareList,
+  addProductsToFavoriteList,
+  compareProductsState,
+  favoriteProductsState,
+  removeProductsFromCompareList,
+  removeProductsFromFavoriteList,
+} from "../app/Redux/products/productSlice"
 
 interface IProductCard {
   product: IProductResponse
@@ -95,14 +103,37 @@ const WishListIcon = styled.div`
 `
 
 export default function ProductCard({ product, grid }: IProductCard) {
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const favoriteProducts = useAppSelector(favoriteProductsState)
+  const compareProducts = useAppSelector(compareProductsState)
+  const isFavorite = favoriteProducts.some((item) => item.id === product.id)
+  const isComparing = compareProducts.some((item) => item.id === product.id)
+
   return (
     <NavLink to={`/products/${product?.category}/${product?.id}`}>
       <ProductItem className="position-relative">
         <WishListIcon className="position-absolute z-1">
-          <Checkbox
-            icon={<FavoriteBorder color="warning" />}
-            checkedIcon={<Favorite color="error" />}
-          />
+          <Tippy
+            content={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Checkbox
+              onChange={() => {
+                if (isFavorite === false) {
+                  dispatch(addProductsToFavoriteList(product))
+                } else {
+                  dispatch(removeProductsFromFavoriteList(product))
+                }
+              }}
+              checked={isFavorite}
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+              icon={<FavoriteBorder color="warning" />}
+              checkedIcon={<Favorite color="error" />}
+            />
+          </Tippy>
         </WishListIcon>
         <Card>
           <Container>
@@ -116,7 +147,6 @@ export default function ProductCard({ product, grid }: IProductCard) {
                       width: "225px",
                       height: "225px  ",
                     }}
-                    // variant="top"
                     src={product?.image}
                   />
                 </div>
@@ -144,15 +174,50 @@ export default function ProductCard({ product, grid }: IProductCard) {
 
         <ActionBar className="position-absolute">
           <div className="d-flex flex-column gap-15 z-1 ">
-            <IconButton size="small" aria-label="compare" color="warning">
-              <CompareArrowsOutlinedIcon fontSize="small" />
-            </IconButton>
-            <IconButton size="small" aria-label="views" color="warning">
-              <VisibilityOutlinedIcon fontSize="small" />
-            </IconButton>
-            <IconButton size="small" aria-label="add-to-cart" color="warning">
-              <ShoppingBagOutlinedIcon fontSize="small" />
-            </IconButton>
+            <Tippy content={"Add to compare"}>
+              <Checkbox
+                checked={isComparing}
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+                onChange={() => {
+                  if (isComparing === false) {
+                    dispatch(addProductsToCompareList(product))
+                  } else {
+                    dispatch(removeProductsFromCompareList(product))
+                  }
+                }}
+                icon={<CompareIcon color="warning" />}
+                checkedIcon={<CheckIcon color="error" />}
+              />
+            </Tippy>
+            <Tippy content={"See detail"}>
+              <IconButton
+                onClick={(e) => {
+                  e.preventDefault()
+                }}
+                size="small"
+                aria-label="views"
+                color="warning"
+              >
+                <VisibilityOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tippy>
+
+            <Tippy content={"Add to cart"}>
+              <IconButton
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate("/")
+                }}
+                size="small"
+                aria-label="add-to-cart"
+                color="warning"
+              >
+                <ShoppingBagOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tippy>
           </div>
         </ActionBar>
       </ProductItem>
