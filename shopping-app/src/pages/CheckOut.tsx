@@ -73,10 +73,10 @@ const Checkout = () => {
                           : "var(--color-ededed)",
                       }
                     }}
-                    to="cart"
+                    to="/cart"
                     className="d-flex align-items-center gap-10"
                   >
-                    <Badge badgeContent={50} color="warning">
+                    <Badge badgeContent={cartProducts?.length} color="warning">
                       <ShoppingCartOutlinedIcon />
                     </Badge>
                   </NavLink>

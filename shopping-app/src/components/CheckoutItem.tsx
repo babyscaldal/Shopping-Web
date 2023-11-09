@@ -15,47 +15,12 @@ interface ICartItem {
 
 export const CheckoutItem = ({ item }: ICartItem) => {
   const dispatch = useAppDispatch()
-  const [count, setCount] = useState(item.quantity)
   const navigate = useNavigate()
-  const [updatedProduct, setUpdatedProduct] = useState(item)
+  const [updatedProduct] = useState(item)
 
   useEffect(() => {
     dispatch(addTotalPriceToCartProducts(updatedProduct))
   }, [updatedProduct])
-
-  const handleClickToDeleteSingleProduct = () => {
-    dispatch(removeProductsFromCartList(item))
-  }
-
-  const handleIncrease = () => {
-    setCount((prevCount) => {
-      setUpdatedProduct({
-        ...item,
-        quantity: prevCount + 1,
-        totalPrice: item.price * (prevCount + 1),
-      })
-      return prevCount + 1
-    })
-  }
-
-  const handleDecrease = () => {
-    setCount((prevCount) => {
-      if (prevCount > 1) {
-        setUpdatedProduct({
-          ...item,
-          quantity: prevCount - 1,
-          totalPrice: item.price * (prevCount - 1),
-        })
-        return prevCount - 1
-      }
-      setUpdatedProduct({
-        ...item,
-        quantity: 1,
-        totalPrice: item.price,
-      })
-      return prevCount
-    })
-  }
 
   return (
     <TableRow

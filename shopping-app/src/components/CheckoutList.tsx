@@ -5,14 +5,11 @@ import TableContainer from "@mui/material/TableContainer"
 
 import { CheckoutItem } from "./CheckoutItem"
 import { TableCell, TableHead, TableRow } from "@mui/material"
-
-export interface ICartList {
-  id: number
-}
-
-export const cartList: ICartList[] = [{ id: 1 }, { id: 2 }, { id: 3 }]
+import { useAppSelector } from "../app/hooks"
+import { cartProductsState } from "../app/Redux/products/productSlice"
 
 export default function CheckoutList() {
+  const cartProducts = useAppSelector(cartProductsState)
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 190 }}>
@@ -50,10 +47,9 @@ export default function CheckoutList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {cartList.length &&
-              cartList.map((item) => (
-                <CheckoutItem item={item} key={item.id} />
-              ))}
+            {cartProducts?.map((item) => (
+              <CheckoutItem item={item} key={item.id} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

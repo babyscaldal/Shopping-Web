@@ -1,14 +1,14 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { useEffect, useState } from "react"
-import { ICartList } from "./CartTable"
 import {
   addToSelectedList,
   removeFromSelectedList,
 } from "../app/Redux/cart/CartSlice"
 import { Checkbox } from "@mui/material"
+import { IProductResponse } from "../app/Redux/products/productType"
 
 interface ISingleCartSelected {
-  item: ICartList
+  item: IProductResponse
 }
 
 export default function SingleCartSelected({ item }: ISingleCartSelected) {
