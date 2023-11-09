@@ -3,6 +3,7 @@ import images from "../Image/images"
 import styled from "styled-components"
 import { Link, useNavigate } from "react-router-dom"
 import { IProductResponse } from "../app/Redux/products/productType"
+import { useFormContext } from "react-hook-form"
 
 const ItemWrapper = styled.div`
   padding: 10px 20px;
@@ -32,14 +33,21 @@ const Price = styled.p`
 
 interface ISearchResultItem {
   product: IProductResponse
+  onHideResult?: () => void
 }
 
-export default function SearchResultItem({ product }: ISearchResultItem) {
+export default function SearchResultItem({
+  product,
+  onHideResult,
+}: ISearchResultItem) {
   const navigate = useNavigate()
+  const { reset } = useFormContext()
   return (
     <ItemWrapper
       className="d-flex align-items-center gap-4"
       onClick={() => {
+        onHideResult && onHideResult()
+        reset()
         navigate(`/products/${product?.category}/${product?.id}`)
       }}
     >

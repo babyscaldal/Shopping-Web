@@ -7,6 +7,9 @@ import Menu from "@mui/material/Menu"
 import Avatar from "@mui/material/Avatar"
 import Tooltip from "@mui/material/Tooltip"
 import MenuItem from "@mui/material/MenuItem"
+import { useNavigate } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { currentUserState, logout } from "../app/Redux/users/userSlice"
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"]
 
@@ -23,11 +26,18 @@ function UserLoggedInMenu() {
     setAnchorElUser(null)
   }
 
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+
+  const currentUser = useAppSelector(currentUserState)
+
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title="Open settings">
+      <Tooltip arrow title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          <Avatar sx={{ bgcolor: "secondary.main" }}>
+            {currentUser?.user.username.slice(0, 1)}
+          </Avatar>
         </IconButton>
       </Tooltip>
       <Menu
@@ -46,11 +56,23 @@ function UserLoggedInMenu() {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
-          </MenuItem>
-        ))}
+        <MenuItem
+          onClick={() => {
+            navigate("/my-profile")
+            handleCloseUserMenu()
+          }}
+        >
+          <Typography textAlign="center">My Profile</Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleCloseUserMenu()
+            dispatch(logout())
+            navigate("/")
+          }}
+        >
+          <Typography textAlign="center">Log out</Typography>
+        </MenuItem>
       </Menu>
     </Box>
   )

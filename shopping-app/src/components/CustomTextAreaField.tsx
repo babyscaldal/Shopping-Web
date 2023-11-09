@@ -26,7 +26,6 @@ export default function CustomTextAreaField({
         field: { value, onChange, onBlur },
         fieldState: { error },
       }) => {
-        console.log(value)
         return (
           <FormControl
             fullWidth

@@ -129,7 +129,12 @@ export default function CustomSearchBarField({
               <div tabIndex={-1} {...props}>
                 <PopoverContent>
                   {searchResultProducts?.map((product) => (
-                    <SearchResultItem key={product.id} product={product} />
+                    <SearchResultItem
+                      // showResult={showResult}
+                      onHideResult={onHideResult}
+                      key={product.id}
+                      product={product}
+                    />
                   ))}
                 </PopoverContent>
               </div>

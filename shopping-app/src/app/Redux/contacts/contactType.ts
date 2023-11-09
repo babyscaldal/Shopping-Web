@@ -4,3 +4,6 @@ export interface IContact {
   tel: string
   comments: string
 }
+export interface ISubscribeEmail {
+  subscribe: string
+}

@@ -3,6 +3,9 @@ import useTitle from "../hooks/useTitle"
 import { Col, Container, Row } from "react-bootstrap"
 import CartTable from "../components/CartTable"
 import CartPayment from "../components/CartPayment"
+import { cartProductsState } from "../app/Redux/products/productSlice"
+import { useAppSelector } from "../app/hooks"
+import NotFound from "../components/NotFound"
 
 const Wrapper = styled.section`
   padding-top: 150px;
@@ -19,21 +22,28 @@ const StickyChild = styled.div`
 
 export default function Cart() {
   useTitle("Cart")
+
+  const cartProducts = useAppSelector(cartProductsState)
+
   return (
     <Wrapper>
       <Container fluid="xxl" className="cart-wrapper home-wrapper-2">
-        <Row className="g-3">
-          <Col xs={9}>
-            <StickyParent>
-              <StickyChild>
-                <CartTable />
-              </StickyChild>
-            </StickyParent>
-          </Col>
-          <Col xs={2} className="flex-grow-1">
-            <CartPayment />
-          </Col>
-        </Row>
+        {cartProducts?.length ? (
+          <Row className="g-3">
+            <Col xs={9}>
+              <StickyParent>
+                <StickyChild>
+                  <CartTable />
+                </StickyChild>
+              </StickyParent>
+            </Col>
+            <Col xs={2} className="flex-grow-1">
+              <CartPayment />
+            </Col>
+          </Row>
+        ) : (
+          <NotFound />
+        )}
       </Container>
     </Wrapper>
   )

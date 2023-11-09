@@ -5,6 +5,7 @@ import productReducer from "./Redux/products/productSlice"
 import categoryReducer from "./Redux/Categories/CategorySlice"
 import blogsReducer from "./Redux/blogs/blogSlice"
 import contactReducer from "./Redux/contacts/contactSlice"
+import countryReducer from "./Redux/countries/countrySlice"
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     category: categoryReducer,
     blog: blogsReducer,
     contact: contactReducer,
+    country: countryReducer,
   },
 })
 

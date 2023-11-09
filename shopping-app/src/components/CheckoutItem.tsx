@@ -1,18 +1,62 @@
-import { TableRow, TableCell, IconButton } from "@mui/material"
-import images from "../Image/images"
-import Image from "./Image"
-import { ICartList } from "./CartTable"
-import styled from "styled-components"
+import { TableRow, TableCell } from "@mui/material"
+import { useNavigate } from "react-router-dom"
+import { IProductResponse } from "../app/Redux/products/productType"
+import {
+  addTotalPriceToCartProducts,
+  removeProductsFromCartList,
+} from "../app/Redux/products/productSlice"
+import { useAppDispatch } from "../app/hooks"
+import DeleteConfirmModal from "./DeleteConfirmModal"
+import { useEffect, useState } from "react"
 
 interface ICartItem {
-  item: ICartList
+  item: IProductResponse
 }
 
-const ItemHeader = styled.h6`
-  font-weight: bold;
-`
-
 export const CheckoutItem = ({ item }: ICartItem) => {
+  const dispatch = useAppDispatch()
+  const [count, setCount] = useState(item.quantity)
+  const navigate = useNavigate()
+  const [updatedProduct, setUpdatedProduct] = useState(item)
+
+  useEffect(() => {
+    dispatch(addTotalPriceToCartProducts(updatedProduct))
+  }, [updatedProduct])
+
+  const handleClickToDeleteSingleProduct = () => {
+    dispatch(removeProductsFromCartList(item))
+  }
+
+  const handleIncrease = () => {
+    setCount((prevCount) => {
+      setUpdatedProduct({
+        ...item,
+        quantity: prevCount + 1,
+        totalPrice: item.price * (prevCount + 1),
+      })
+      return prevCount + 1
+    })
+  }
+
+  const handleDecrease = () => {
+    setCount((prevCount) => {
+      if (prevCount > 1) {
+        setUpdatedProduct({
+          ...item,
+          quantity: prevCount - 1,
+          totalPrice: item.price * (prevCount - 1),
+        })
+        return prevCount - 1
+      }
+      setUpdatedProduct({
+        ...item,
+        quantity: 1,
+        totalPrice: item.price,
+      })
+      return prevCount
+    })
+  }
+
   return (
     <TableRow
       sx={{
@@ -20,21 +64,18 @@ export const CheckoutItem = ({ item }: ICartItem) => {
         "&:hover": { backgroundColor: "action.hover", cursor: "pointer" },
       }}
     >
+      <TableCell align="left">
+        <h6 onClick={() => navigate(`/products/${item?.category}/${item?.id}`)}>
+          {item?.title}
+        </h6>
+      </TableCell>
       <TableCell align="center">
-        <Image
-          width="100px"
-          height="100px"
-          src={images.smartWatchs}
-          alt="product"
-        />
+        <h6>{item?.quantity}</h6>
       </TableCell>
-      <TableCell sx={{ textAlign: "center" }} align="left">
-        <ItemHeader>Lorem ipsum dolor sit</ItemHeader>
-        <p>Size: M</p>
-        <p>Color: black</p>
+
+      <TableCell align="right">
+        <h6>${item?.totalPrice}</h6>
       </TableCell>
-      <TableCell align="center">20</TableCell>
-      <TableCell align="center">$100.00</TableCell>
     </TableRow>
   )
 }

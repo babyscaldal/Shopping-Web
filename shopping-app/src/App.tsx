@@ -5,20 +5,25 @@ import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
 import "tippy.js/dist/tippy.css"
+import { useEffect, useMemo, useState } from "react"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 import GlobalStyles from "./style/GlobalStyle"
 import { useAppDispatch, useAppSelector } from "./app/hooks"
 import OurStore from "./pages/OurStore"
 import ProductsList from "./components/ProductsList"
-import { useEffect, useMemo, useState } from "react"
 import {
+  cartProductsState,
   cloneToFilterProductList,
+  commentsSingleProductState,
   compareProductsState,
   favoriteProductsState,
   filterProductsListState,
   getPopularProducts,
   getProducts,
   renderProductsState,
+  selectedProductState,
 } from "./app/Redux/products/productSlice"
 import { getAllCategories } from "./app/Redux/Categories/CategorySlice"
 import Layout from "./components/Layout"
@@ -43,11 +48,23 @@ import Compare from "./pages/Compare"
 import { getAllBlogs } from "./app/Redux/blogs/blogSlice"
 import Test from "./pages/Test"
 import SearchProductsList from "./pages/SearchProductsList"
+import { isLoginState } from "./app/Redux/users/userSlice"
+import { PayPalScriptProvider } from "@paypal/react-paypal-js"
+import MyProfile from "./pages/MyProfile"
+
+export const CLIENT_ID =
+  "AR7DIhTjR3PfJecOliIJIq0BFyNqkRXChTJZWA3Wwz1_eo5tZVCaEHhmocoz80Q3_GjThDlyjvvIc6YM"
 
 function App() {
+  const favoriteProducts = useAppSelector(favoriteProductsState)
+  const compareProducts = useAppSelector(compareProductsState)
+  const cartProducts = useAppSelector(cartProductsState)
+  const commentsProduct = useAppSelector(commentsSingleProductState)
+  const selectedProduct = useAppSelector(selectedProductState)
   const renderProducts = useAppSelector(renderProductsState)
   const filterProducts = useAppSelector(filterProductsListState)
   const dispatch = useAppDispatch()
+  const isLogin = useAppSelector(isLoginState)
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemPerPage = 6
@@ -77,6 +94,26 @@ function App() {
   useEffect(() => {
     dispatch(cloneToFilterProductList(renderProducts))
   }, [renderProducts])
+
+  useEffect(() => {
+    localStorage.setItem("favoriteList", JSON.stringify(favoriteProducts))
+  }, [favoriteProducts])
+
+  useEffect(() => {
+    localStorage.setItem("compareList", JSON.stringify(compareProducts))
+  }, [compareProducts])
+
+  useEffect(() => {
+    localStorage.setItem("cartProducts", JSON.stringify(cartProducts))
+  }, [cartProducts])
+
+  useEffect(() => {
+    localStorage.setItem("selectedProduct", JSON.stringify(selectedProduct))
+  }, [selectedProduct])
+
+  useEffect(() => {
+    localStorage.setItem("commentsProduct", JSON.stringify(commentsProduct))
+  }, [commentsProduct])
 
   const router = useMemo(() => {
     return createBrowserRouter([
@@ -146,7 +183,7 @@ function App() {
           },
           {
             path: "cart",
-            element: <Cart />,
+            element: isLogin ? <Cart /> : <Navigate to={"/login"} />,
           },
           {
             path: "signUp",
@@ -176,35 +213,34 @@ function App() {
             path: "term-condition",
             element: <TermAndCondition />,
           },
-          {
-            path: "checkout",
-            element: <Checkout />,
-          },
+
           {
             path: "search",
             element: <SearchProductsList />,
           },
           { path: "test", element: <Test /> },
+          {
+            path: "my-profile",
+            element: <MyProfile />,
+          },
         ],
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
       },
     ])
   }, [handleCategoryChange, displayedProducts, currentPage, handlePageChange])
 
-  const favoriteProducts = useAppSelector(favoriteProductsState)
-  const compareProducts = useAppSelector(compareProductsState)
-
-  useEffect(() => {
-    localStorage.setItem("favoriteList", JSON.stringify(favoriteProducts))
-  }, [favoriteProducts])
-
-  useEffect(() => {
-    localStorage.setItem("compareList", JSON.stringify(compareProducts))
-  }, [compareProducts])
-
   return (
-    <GlobalStyles>
-      <RouterProvider router={router} />
-    </GlobalStyles>
+    <PayPalScriptProvider options={{ clientId: CLIENT_ID }}>
+      <QueryClientProvider client={new QueryClient()}>
+        <GlobalStyles>
+          <RouterProvider router={router} />
+        </GlobalStyles>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </PayPalScriptProvider>
   )
 }
 

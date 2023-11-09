@@ -3,6 +3,8 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import AddAlertIcon from "@mui/icons-material/AddAlert"
 import CustomSubscribeField from "./CustomSubscribeField"
+import { useAppDispatch } from "../app/hooks"
+import { postSubscribeEmailInfo } from "../app/Redux/contacts/contactSlice"
 
 export const subscribeValueSchema = z.object({
   subscribe: z
@@ -12,6 +14,8 @@ export const subscribeValueSchema = z.object({
 })
 
 export default function SubscribeBarForm() {
+  const dispatch = useAppDispatch()
+
   const form = useForm({
     defaultValues: { subscribe: "" },
     resolver: zodResolver(subscribeValueSchema),
@@ -22,6 +26,7 @@ export default function SubscribeBarForm() {
 
   const onSubmit = (data: any) => {
     console.log(data)
+    dispatch(postSubscribeEmailInfo(data))
     reset()
   }
 

@@ -1,8 +1,8 @@
-import { NavLink, Outlet } from "react-router-dom"
+import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import { Pagination } from "@mui/material"
+import { Chip, Pagination } from "@mui/material"
 
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import useTitle from "../hooks/useTitle"
@@ -85,7 +85,7 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-rows: 64px auto 64px;
   grid-gap: 16px;
-  height: 1210px;
+  height: 1172px;
 `
 
 const StyledGridItem = styled.div``
@@ -106,6 +106,7 @@ export default function OurStore({
   const filterProducts = useAppSelector(filterProductsListState)
 
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const allCategories = useAppSelector(categories)
 
@@ -172,14 +173,16 @@ export default function OurStore({
                 <Col xs={12}>
                   <FilterCard>
                     <FilterTitle>Product Tags</FilterTitle>
-                    <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                    <div className="product-tags d-flex flex-wrap align-items-center gap-1">
                       {allCategories?.map((category, index) => (
-                        <span
-                          key={category.id}
-                          className="badge bg-light text-secondary rounded-3 py-2 px-3"
-                        >
-                          {toCapitalize(category?.category)}
-                        </span>
+                        <Chip
+                          key={index}
+                          label={toCapitalize(category?.category)}
+                          onClick={() => {
+                            dispatch(getProductsInCategory(category?.id))
+                            navigate(`/products/${category?.category}`)
+                          }}
+                        />
                       ))}
                     </div>
                   </FilterCard>

@@ -1,4 +1,5 @@
 import axiosClient from "../../axiosClient"
+import { IComments } from "./productType"
 
 const productServices = {
   getAllProducts: async () => {
@@ -24,6 +25,20 @@ const productServices = {
       searchValue,
     )}`
     const response = await axiosClient.get(SEARCH_PRODUCT_URL)
+    return response
+  },
+  getCommentsSingleProduct: async (productId: number) => {
+    const GET_COMMENTS_SINGLE_PRODUCTS_URL = `http://localhost:3000/products/${productId}/comments`
+    const response = await axiosClient.get(GET_COMMENTS_SINGLE_PRODUCTS_URL)
+    return response
+  },
+
+  postCommentsSingleProduct: async (data: IComments) => {
+    const POST_COMMENTS_SINGLE_PRODUCTS_URL = `http://localhost:3000/comments`
+    const response = await axiosClient.post(
+      POST_COMMENTS_SINGLE_PRODUCTS_URL,
+      data,
+    )
     return response
   },
 }

@@ -36,7 +36,7 @@ export default function ProductGallery({ product }: IProductGallery) {
       activeIndex={index}
       onSelect={handleSelect}
     >
-      {product?.gallery.map((image, index) => (
+      {product?.gallery?.map((image, index) => (
         <Carousel.Item key={`image - ${index}`}>
           <div style={{ width: "100%", height: "500px" }}>
             <img

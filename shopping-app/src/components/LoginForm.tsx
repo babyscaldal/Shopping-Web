@@ -5,8 +5,9 @@ import { Button } from "@mui/material"
 import { NavLink, useNavigate } from "react-router-dom"
 import PasswordField from "./PasswordField"
 import EmailField from "./CustomTextField"
-import { useAppDispatch } from "../app/hooks"
-import { loginUser } from "../app/Redux/users/userSlice"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import { isLoginState, loginUser } from "../app/Redux/users/userSlice"
+import { useEffect } from "react"
 
 export type ILoginFormValue = {
   email: string
@@ -20,7 +21,11 @@ export const loginValueSchema = z.object({
     .min(8, { message: "The password must be least 8 characters long." }),
 })
 
-export default function LoginForm() {
+interface ILoginForm {
+  handleClose?: () => void
+}
+
+export default function LoginForm({ handleClose }: ILoginForm) {
   const dispatch = useAppDispatch()
   const form = useForm<ILoginFormValue>({
     defaultValues: { email: "", password: "" },
@@ -38,6 +43,14 @@ export default function LoginForm() {
     dispatch(loginUser(loginRequestData))
     reset()
   }
+
+  const isLogin = useAppSelector(isLoginState)
+
+  useEffect(() => {
+    if (isLogin) {
+      navigate("/", { replace: true })
+    }
+  }, [isLogin])
 
   return (
     <FormProvider {...form}>
@@ -75,7 +88,10 @@ export default function LoginForm() {
             Log In
           </Button>
           <Button
-            onClick={() => navigate("/signup")}
+            onClick={() => {
+              navigate("/signup")
+              // handleClose && handleClose()
+            }}
             fullWidth
             type="button"
             variant="contained"

@@ -1,12 +1,12 @@
 import { Col, Container, Dropdown, Row } from "react-bootstrap"
 import { NavLink, useNavigate } from "react-router-dom"
-import { Badge } from "@mui/material"
 import styled from "styled-components"
 import CompareIcon from "@mui/icons-material/Compare"
 import PersonIcon from "@mui/icons-material/Person"
 import FavoriteIcon from "@mui/icons-material/Favorite"
+import { Badge } from "@mui/material"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { AppBar } from "@mui/material"
 
 import images from "../Image/images"
@@ -16,11 +16,14 @@ import UserLoggedInMenu from "./UserLoggedInMenu"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { categories } from "../app/Redux/Categories/CategorySlice"
 import {
+  cartProductsState,
   compareProductsState,
   favoriteProductsState,
   getProducts,
   getProductsInCategory,
 } from "../app/Redux/products/productSlice"
+import { getCurrentUser, isLoginState } from "../app/Redux/users/userSlice"
+import ModalForm from "./Modal"
 
 const HeaderUpperContainer = styled.div`
   background: var(--color-131921);
@@ -92,10 +95,18 @@ const NavItemWrapper = styled.div`
 export default function Header() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [isLogin] = useState(true)
+  const isLogin = useAppSelector(isLoginState)
+
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(getCurrentUser())
+    }
+  }, [isLogin])
+
   const categoriesList = useAppSelector(categories)
   const favoriteProducts = useAppSelector(favoriteProductsState)
   const compareProducts = useAppSelector(compareProductsState)
+  const cartProducts = useAppSelector(cartProductsState)
 
   return (
     <AppBar position="fixed" sx={{ boxShadow: "none" }}>
@@ -104,7 +115,11 @@ export default function Header() {
           <Row className="align-items-center justify-content-around">
             <Col xs={3}>
               <h2 className="m-0">
-                <NavLink className="text-white" to="/">
+                <NavLink
+                  // onClick={() => window.location.reload()}
+                  className="text-white"
+                  to="/"
+                >
                   DIGITAL ZONE
                 </NavLink>
               </h2>
@@ -163,49 +178,55 @@ export default function Header() {
                     <p className="mb-0">Favorite</p>
                   </NavLink>
                 </NavItemWrapper>
-                {/* {isLogin && ( */}
-                <NavItemWrapper>
-                  <NavLink
-                    style={({ isActive }) => {
-                      return {
-                        fontSize: "18px",
-                        color: isActive
-                          ? "var(--color-febd69)"
-                          : "var(--color-ededed)",
-                      }
-                    }}
-                    to="login"
-                    className="d-flex align-items-center gap-10"
-                  >
-                    <PersonIcon />
-                    <p className="mb-0">Login</p>
-                  </NavLink>
-                </NavItemWrapper>
-                {/* )} */}
-                <NavItemWrapper>
-                  <NavLink
-                    style={({ isActive }) => {
-                      return {
-                        fontSize: isActive ? "16px" : "14px",
-                        fontWeight: isActive ? "bolder" : "",
-                        color: isActive
-                          ? "var(--color-febd69)"
-                          : "var(--color-ededed)",
-                      }
-                    }}
-                    to="cart"
-                    className="d-flex align-items-center gap-10"
-                  >
-                    <Badge badgeContent={50} color="warning">
-                      <ShoppingCartOutlinedIcon />
-                    </Badge>
-                  </NavLink>
-                </NavItemWrapper>
-                {/* {!isLogin && ( */}
-                <div>
+                {isLogin ? (
+                  <NavItemWrapper>
+                    <NavLink
+                      style={({ isActive }) => {
+                        return {
+                          fontSize: isActive ? "16px" : "14px",
+                          fontWeight: isActive ? "bolder" : "",
+                          color: isActive
+                            ? "var(--color-febd69)"
+                            : "var(--color-ededed)",
+                        }
+                      }}
+                      to={"/cart"}
+                      className="d-flex align-items-center gap-10"
+                    >
+                      <Badge
+                        badgeContent={cartProducts?.length}
+                        color="warning"
+                      >
+                        <ShoppingCartOutlinedIcon />
+                      </Badge>
+                    </NavLink>
+                    {/* <ModalForm /> */}
+                  </NavItemWrapper>
+                ) : (
+                  <ModalForm />
+                )}
+
+                {isLogin ? (
                   <UserLoggedInMenu />
-                </div>
-                {/* )} */}
+                ) : (
+                  <NavItemWrapper>
+                    <NavLink
+                      style={({ isActive }) => {
+                        return {
+                          fontSize: "18px",
+                          color: isActive
+                            ? "var(--color-febd69)"
+                            : "var(--color-ededed)",
+                        }
+                      }}
+                      to="login"
+                      className="d-flex align-items-center gap-10"
+                    >
+                      <PersonIcon />
+                      <p className="mb-0">Login</p>
+                    </NavLink>
+                  </NavItemWrapper>
+                )}
               </div>
             </Col>
           </Row>

@@ -14,10 +14,13 @@ import Tippy from "@tippyjs/react"
 import CheckIcon from "@mui/icons-material/Check"
 import CompareIcon from "@mui/icons-material/Compare"
 import {
+  addProductsToCartList,
   addProductsToCompareList,
   addProductsToFavoriteList,
   compareProductsState,
   favoriteProductsState,
+  getCommentsSingleProduct,
+  getSelectedProduct,
   removeProductsFromCompareList,
   removeProductsFromFavoriteList,
 } from "../app/Redux/products/productSlice"
@@ -103,7 +106,6 @@ const WishListIcon = styled.div`
 `
 
 export default function ProductCard({ product, grid }: IProductCard) {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const favoriteProducts = useAppSelector(favoriteProductsState)
@@ -113,7 +115,13 @@ export default function ProductCard({ product, grid }: IProductCard) {
 
   return (
     <NavLink to={`/products/${product?.category}/${product?.id}`}>
-      <ProductItem className="position-relative">
+      <ProductItem
+        onClick={() => {
+          dispatch(getSelectedProduct(product))
+          dispatch(getCommentsSingleProduct(product.id))
+        }}
+        className="position-relative"
+      >
         <WishListIcon className="position-absolute z-1">
           <Tippy
             content={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
@@ -163,9 +171,7 @@ export default function ProductCard({ product, grid }: IProductCard) {
                     value={product?.rating?.rate}
                   />
 
-                  <Price className="text-success">
-                    ${product?.price.toFixed(1)}
-                  </Price>
+                  <Price className="text-success">${product?.price}</Price>
                 </Card.Body>
               </Col>
             </Row>
@@ -209,7 +215,13 @@ export default function ProductCard({ product, grid }: IProductCard) {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault()
-                  navigate("/")
+                  // navigate("/")
+                  dispatch(
+                    addProductsToCartList({
+                      ...product,
+                      totalPrice: product.price * product.quantity,
+                    }),
+                  )
                 }}
                 size="small"
                 aria-label="add-to-cart"

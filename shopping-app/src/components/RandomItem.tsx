@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { IProductResponse } from "../app/Redux/products/productType"
 import Image from "./Image"
 import styled from "styled-components"
@@ -35,9 +36,14 @@ const Title = styled.p`
 `
 
 export default function RandomItem({ product }: IRandomItem) {
+  const navigate = useNavigate()
   return (
     <>
-      <Wrapper>
+      <Wrapper
+        onClick={() => {
+          navigate(`/products/${product?.category}/${product?.id}`)
+        }}
+      >
         <Image
           contain
           width="80px"

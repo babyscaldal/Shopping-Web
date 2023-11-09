@@ -7,10 +7,12 @@ import CustomTextField from "./CustomTextField"
 import PasswordField from "./PasswordField"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import {
+  isLoginState,
   registerUser,
   saveUserToClient,
   usersSaved,
 } from "../app/Redux/users/userSlice"
+import { useEffect } from "react"
 
 export interface IRegisterFormValue {
   email: string
@@ -53,6 +55,8 @@ export default function SignUpForm() {
 
   const { handleSubmit, reset } = form
 
+  const isLogin = useAppSelector(isLoginState)
+
   const onSubmit = (data: IRegisterFormValue) => {
     const { confirmPassword, ...others } = data
     const registerInfoData: IRegisterInfoData = { ...others }
@@ -65,6 +69,8 @@ export default function SignUpForm() {
   const usersClient = useAppSelector(usersSaved)
 
   console.log(usersClient)
+
+  console.log(isLogin)
 
   return (
     <FormProvider {...form}>

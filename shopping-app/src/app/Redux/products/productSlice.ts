@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 
 import productServices from "./productServices"
-import { IProductResponse } from "./productType"
+import { IComments, IProductResponse } from "./productType"
 import { RootState } from "../../store"
 
 interface IProductState {
+  count: number
   allProduct: IProductResponse[]
   renderProducts: IProductResponse[]
   productsPerPage: IProductResponse[]
@@ -17,6 +18,10 @@ interface IProductState {
   filterProductsList: IProductResponse[]
   favoriteProducts: IProductResponse[]
   compareProducts: IProductResponse[]
+  cartProducts: IProductResponse[]
+  totalCartProductPrice: number
+  comments: IComments[]
+  selectedProduct: IProductResponse
 }
 
 export const getProducts = createAsyncThunk(
@@ -67,6 +72,30 @@ export const searchProducts = createAsyncThunk(
   },
 )
 
+export const getCommentsSingleProduct = createAsyncThunk(
+  "product/getCommentsSingleProduct",
+  async (productId: number, thunkAPI) => {
+    try {
+      const response = await productServices.getCommentsSingleProduct(productId)
+      return response.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  },
+)
+
+export const postCommentsSingleProduct = createAsyncThunk(
+  "product/postCommentsSingleProduct",
+  async (data: IComments, thunkAPI) => {
+    try {
+      const response = await productServices.postCommentsSingleProduct(data)
+      return response.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  },
+)
+
 const favoriteListInLocalStorage = localStorage.getItem("favoriteList")
 const favoriteListInitState: IProductResponse[] = favoriteListInLocalStorage
   ? JSON.parse(favoriteListInLocalStorage)
@@ -77,7 +106,23 @@ const compareListInitState: IProductResponse[] = compareListInLocalStorage
   ? JSON.parse(compareListInLocalStorage)
   : []
 
+const cartProductsInLocalStorage = localStorage.getItem("cartProducts")
+const cartProductsInitState: IProductResponse[] = cartProductsInLocalStorage
+  ? JSON.parse(cartProductsInLocalStorage)
+  : []
+
+const selectedProductInLocalStorage = localStorage.getItem("selectedProduct")
+const selectedProductInitState: IProductResponse = selectedProductInLocalStorage
+  ? JSON.parse(selectedProductInLocalStorage)
+  : {}
+
+const commentsProductInLocalStorage = localStorage.getItem("commentsProduct")
+const commentsProductInitState: IComments[] = commentsProductInLocalStorage
+  ? JSON.parse(commentsProductInLocalStorage)
+  : []
+
 export const productState: IProductState = {
+  count: 1,
   renderProducts: [],
   filterProductsList: [],
   allProduct: [],
@@ -90,6 +135,10 @@ export const productState: IProductState = {
   searchResultProducts: [],
   favoriteProducts: favoriteListInitState,
   compareProducts: compareListInitState,
+  cartProducts: cartProductsInitState,
+  totalCartProductPrice: 0,
+  comments: commentsProductInitState,
+  selectedProduct: selectedProductInitState,
 }
 
 export const productSlice = createSlice({
@@ -199,6 +248,61 @@ export const productSlice = createSlice({
         (product) => product.id !== action.payload.id,
       )
     },
+
+    addProductsToCartList: (state, action: PayloadAction<IProductResponse>) => {
+      const isAdded = state.cartProducts.some(
+        (product) => product.id === action.payload.id,
+      )
+      if (isAdded) return
+      state.cartProducts = [...state.cartProducts, action.payload]
+    },
+
+    removeProductsFromCartList: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      state.cartProducts = state.cartProducts.filter(
+        (product) => product.id !== action.payload.id,
+      )
+    },
+
+    removeAllProducts: (state) => {
+      state.cartProducts = []
+    },
+
+    removeAllSelectedProductsFromCartList: (
+      state,
+      action: PayloadAction<IProductResponse[]>,
+    ) => {
+      const selectedProductIds = action.payload.map((product) => product.id)
+      state.cartProducts = state.cartProducts.filter((cartProduct) => {
+        return !selectedProductIds.includes(cartProduct.id)
+      })
+    },
+
+    addTotalPriceToCartProducts: (
+      state,
+      action: PayloadAction<IProductResponse>,
+    ) => {
+      state.cartProducts = state.cartProducts.map((product) => {
+        if (product.id === action.payload.id) {
+          return {
+            ...product,
+            quantity: action.payload.quantity,
+            totalPrice: action.payload.totalPrice,
+          }
+        }
+        return product
+      })
+    },
+
+    totalPriceCalculate: (state, action: PayloadAction<number>) => {
+      state.totalCartProductPrice = action.payload
+    },
+
+    getSelectedProduct: (state, action: PayloadAction<IProductResponse>) => {
+      state.selectedProduct = action.payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -276,6 +380,42 @@ export const productSlice = createSlice({
         state.isError = true
         state.message = action.error
       })
+      .addCase(getCommentsSingleProduct.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(
+        getCommentsSingleProduct.fulfilled,
+        (state, action: PayloadAction<IComments[]>) => {
+          state.comments = action.payload
+          state.isLoading = false
+          state.isSuccess = true
+          state.isError = false
+        },
+      )
+      .addCase(getCommentsSingleProduct.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = true
+        state.message = action.error
+      })
+      .addCase(postCommentsSingleProduct.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(
+        postCommentsSingleProduct.fulfilled,
+        (state, action: PayloadAction<IComments>) => {
+          state.comments = [...state.comments, action.payload]
+          state.isLoading = false
+          state.isSuccess = true
+          state.isError = false
+        },
+      )
+      .addCase(postCommentsSingleProduct.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = true
+        state.message = action.error
+      })
   },
 })
 
@@ -304,8 +444,25 @@ export const favoriteProductsState = (state: RootState) =>
 export const compareProductsState = (state: RootState) =>
   state?.product?.compareProducts
 
+export const countState = (state: RootState) => state?.product?.count
+
 export const isLoadingState = (state: RootState) => state?.product?.isLoading
+
+export const cartProductsState = (state: RootState) =>
+  state?.product?.cartProducts
+
+export const totalCartProductPriceState = (state: RootState) =>
+  state?.product?.totalCartProductPrice
+
+export const commentsSingleProductState = (state: RootState) =>
+  state?.product?.comments
+
+export const selectedProductState = (state: RootState) =>
+  state?.product?.selectedProduct
+
 export const {
+  removeAllSelectedProductsFromCartList,
+  addProductsToCartList,
   addProductsToFavoriteList,
   removeProductsFromFavoriteList,
   addProductsToCompareList,
@@ -317,8 +474,12 @@ export const {
   sortProductsByPriceHigh,
   sortProductsByPriceLow,
   filterProductsByRate,
-
+  removeProductsFromCartList,
   cloneToFilterProductList,
   filterProductsByPrice,
+  addTotalPriceToCartProducts,
+  totalPriceCalculate,
+  removeAllProducts,
+  getSelectedProduct,
 } = productSlice.actions
 export default productSlice.reducer

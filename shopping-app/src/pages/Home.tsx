@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Marquee from "react-fast-marquee"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
@@ -21,6 +21,7 @@ import { categories } from "../app/Redux/Categories/CategorySlice"
 import HeroCarousel from "../components/Carousel"
 import { allBlogState } from "../app/Redux/blogs/blogSlice"
 import ResponsiveSlides from "../components/ResponsiveSlides"
+import { isLoginState } from "../app/Redux/users/userSlice"
 
 const FirstHomeWrapper = styled.section`
   background-color: var(--color-f5f5f7);
@@ -127,6 +128,9 @@ const AllWrapper = styled.section`
 
 export default function Home() {
   useTitle("Storage")
+
+  const navigate = useNavigate()
+  const isLogin = useAppSelector(isLoginState)
 
   const dispatch = useAppDispatch()
 

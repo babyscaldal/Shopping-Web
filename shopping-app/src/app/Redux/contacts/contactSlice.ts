@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "../../store"
 import contactServices from "./contactServices"
-import { IContact } from "./contactType"
+import { IContact, ISubscribeEmail } from "./contactType"
 import { ac } from "vitest/dist/types-e3c9754d.js"
 import { toast } from "react-toastify"
 
@@ -17,15 +17,31 @@ export const postContactInfo = createAsyncThunk(
   },
 )
 
+export const postSubscribeEmailInfo = createAsyncThunk(
+  "contact/postSubscribeEmailInfo",
+  async (subscribeEmail: ISubscribeEmail, thunkAPI) => {
+    try {
+      const response = await contactServices.postSubscribeEmailInfo(
+        subscribeEmail,
+      )
+      return response.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error)
+    }
+  },
+)
+
 interface IContactState {
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
   contacts: IContact[]
+  subscribe: ISubscribeEmail[]
   message: any
 }
 
 const contactState: IContactState = {
+  subscribe: [],
   contacts: [],
   isLoading: false,
   isSuccess: false,
@@ -55,6 +71,30 @@ export const contactSlice = createSlice({
         },
       )
       .addCase(postContactInfo.rejected, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = true
+        state.message = action.error.message
+        if (state.isError) {
+          toast.error("Something went wrong. Please try again!")
+        }
+      })
+      .addCase(postSubscribeEmailInfo.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(
+        postSubscribeEmailInfo.fulfilled,
+        (state, action: PayloadAction<ISubscribeEmail>) => {
+          state.subscribe = [...state.subscribe, action.payload]
+          state.isLoading = false
+          state.isSuccess = true
+          state.isError = false
+          if (state.isSuccess) {
+            toast.success("Your subscribe is added successfully!")
+          }
+        },
+      )
+      .addCase(postSubscribeEmailInfo.rejected, (state, action) => {
         state.isLoading = false
         state.isSuccess = false
         state.isError = true

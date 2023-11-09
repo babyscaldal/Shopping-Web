@@ -51,8 +51,10 @@ import menClothing from "/CategoryImage/menClothing.png"
 import womenClothing from "/CategoryImage/womenClothing.jpg"
 import electronics from "/CategoryImage/electronics.avif"
 import jewelry from "/CategoryImage/jewellery.jpg"
+import payment from "/images/payment.svg"
 
 const images = {
+  payment,
   mainBanner2,
   jewelry,
   electronics,

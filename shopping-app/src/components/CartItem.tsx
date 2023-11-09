@@ -1,16 +1,65 @@
-import { TableRow, TableCell, IconButton } from "@mui/material"
-import images from "../Image/images"
+import { TableRow, TableCell } from "@mui/material"
 import Image from "./Image"
 import SingleCartSelected from "./SingleCartSelected"
-import { ICartList } from "./CartTable"
 import CountInputField from "./CountInputField"
-import DeleteIcon from "@mui/icons-material/Delete"
+import { IProductResponse } from "../app/Redux/products/productType"
+import {
+  addTotalPriceToCartProducts,
+  removeProductsFromCartList,
+} from "../app/Redux/products/productSlice"
+import { useAppDispatch } from "../app/hooks"
+import DeleteConfirmModal from "./DeleteConfirmModal"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 
 interface ICartItem {
-  item: ICartList
+  item: IProductResponse
 }
 
 export const CartItem = ({ item }: ICartItem) => {
+  const dispatch = useAppDispatch()
+  const [count, setCount] = useState(item.quantity)
+  const navigate = useNavigate()
+  const [updatedProduct, setUpdatedProduct] = useState(item)
+
+  useEffect(() => {
+    dispatch(addTotalPriceToCartProducts(updatedProduct))
+  }, [updatedProduct])
+
+  const handleClickToDeleteSingleProduct = () => {
+    dispatch(removeProductsFromCartList(item))
+  }
+
+  const handleIncrease = () => {
+    setCount((prevCount) => {
+      setUpdatedProduct({
+        ...item,
+        quantity: prevCount + 1,
+        totalPrice: item.price * (prevCount + 1),
+      })
+      return prevCount + 1
+    })
+  }
+
+  const handleDecrease = () => {
+    setCount((prevCount) => {
+      if (prevCount > 1) {
+        setUpdatedProduct({
+          ...item,
+          quantity: prevCount - 1,
+          totalPrice: item.price * (prevCount - 1),
+        })
+        return prevCount - 1
+      }
+      setUpdatedProduct({
+        ...item,
+        quantity: 1,
+        totalPrice: item.price,
+      })
+      return prevCount
+    })
+  }
+
   return (
     <TableRow
       sx={{
@@ -23,30 +72,43 @@ export const CartItem = ({ item }: ICartItem) => {
       </TableCell>
       <TableCell align="center">
         <Image
-          width="150px"
-          height="150px"
-          src={images.smartWatchs}
-          alt="smartWatchs"
+          width="50px"
+          height="50px"
+          src={item?.image}
+          alt={item?.category}
         />
       </TableCell>
-      <TableCell align="left" style={{ textAlign: "justify" }}>
-        <h6>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur
-          aut officiis a magnam fugit beatae, nulla aspernatur doloremque
-          nesciunt sequi?
+      <TableCell align="center">
+        <h6 onClick={() => navigate(`/products/${item?.category}/${item?.id}`)}>
+          {item?.title}
         </h6>
-        <p>Size: M</p>
-        <p>Color: black</p>
+        <Link
+          className="text-decoration-underline"
+          to={`/products/${item?.category}/${item?.id}`}
+        >
+          More detail
+        </Link>
       </TableCell>
-      <TableCell align="center">$100.00</TableCell>
+      <TableCell align="center">${item?.price}</TableCell>
       <TableCell align="center">
-        <CountInputField id={"cart-form-quantity"} />
+        <CountInputField
+          count={count}
+          setCount={setCount}
+          onDecrease={handleDecrease}
+          onIncrease={handleIncrease}
+          item={item}
+          id={"cart-form-quantity"}
+        />
       </TableCell>
-      <TableCell align="center">20</TableCell>
+      <TableCell align="center">${item.totalPrice}</TableCell>
       <TableCell align="center">
-        <IconButton color="warning" aria-label="delete" size="small">
-          <DeleteIcon fontSize="small" />
-        </IconButton>
+        <DeleteConfirmModal
+          setCount={setCount}
+          count={count}
+          title="Delete a single product"
+          onDeleteSingle={handleClickToDeleteSingleProduct}
+          item={item}
+        />
       </TableCell>
     </TableRow>
   )

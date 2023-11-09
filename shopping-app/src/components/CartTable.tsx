@@ -9,40 +9,31 @@ import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
 import { CartItem } from "./CartItem"
 import AllCartSelected from "./AllCartSelected"
-import { useAppSelector } from "../app/hooks"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { selectedCartListState } from "../app/Redux/cart/CartSlice"
-import DeleteIcon from "@mui/icons-material/Delete"
-import { IconButton } from "@mui/material"
-import Tippy from "@tippyjs/react"
-import "tippy.js/dist/tippy.css"
 
-export interface ICartList {
-  id: number
-}
-
-export const cartList: ICartList[] = [{ id: 1 }, { id: 2 }, { id: 3 }]
+import {
+  cartProductsState,
+  removeAllSelectedProductsFromCartList,
+} from "../app/Redux/products/productSlice"
+import { IProductResponse } from "../app/Redux/products/productType"
+import DeleteConfirmModal from "./DeleteConfirmModal"
+import { Tooltip } from "@mui/material"
 
 export default function CartTable() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
-
   const selectedCartList = useAppSelector(selectedCartListState)
   console.log(selectedCartList)
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
+  const handleClickToDeleteAllSelected = (products: IProductResponse[]) => {
+    dispatch(removeAllSelectedProductsFromCartList(products))
   }
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setRowsPerPage(+event.target.value)
-    setPage(0)
-  }
+  const cartProducts = useAppSelector(cartProductsState)
+  const dispatch = useAppDispatch()
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 400 }}>
+      <TableContainer sx={{ height: "calc(100vh - 150px)" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow className="MuiTableRow-divider">
@@ -77,38 +68,28 @@ export default function CartTable() {
               >
                 Quantity
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                Total
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold" }}
+                style={{ width: 150 }}
+              >
+                Price
               </TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                <Tippy
-                  placement="bottom"
-                  content="Delete all selected products"
-                >
-                  <IconButton color="warning" aria-label="delete" size="small">
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Tippy>
+                <DeleteConfirmModal
+                  title="Delete all selected products"
+                  onDeleteAllSelected={handleClickToDeleteAllSelected}
+                />
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {cartList.length &&
-              cartList
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item) => <CartItem item={item} key={item.id} />)}
+            {cartProducts?.map((item) => {
+              return <CartItem item={item} key={item?.id} />
+            })}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10]}
-        component="div"
-        count={cartList.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Paper>
   )
 }

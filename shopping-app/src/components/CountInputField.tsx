@@ -8,9 +8,15 @@ import {
   styled,
 } from "@mui/material"
 import { useState } from "react"
+import { IProductResponse } from "../app/Redux/products/productType"
 
 interface ICountInputField {
   id: string
+  item: IProductResponse
+  count: number
+  onIncrease: () => void
+  onDecrease: () => void
+  setCount: React.Dispatch<React.SetStateAction<number>>
 }
 
 const TextCenterInput = styled(OutlinedInput)`
@@ -19,18 +25,14 @@ const TextCenterInput = styled(OutlinedInput)`
   }
 `
 
-export default function CountInputField({ id }: ICountInputField) {
+export default function CountInputField({
+  id,
+  count,
+  setCount,
+  onDecrease,
+  onIncrease,
+}: ICountInputField) {
   const [iconColor, setColor] = useState("")
-  const [count, setCount] = useState(0)
-
-  const increase = () => {
-    setCount((count) => count + 1)
-  }
-  const decrease = () => {
-    if (count > 0) {
-      setCount((count) => count - 1)
-    }
-  }
 
   return (
     <FormControl
@@ -55,7 +57,7 @@ export default function CountInputField({ id }: ICountInputField) {
         startAdornment={
           <InputAdornment position="start">
             <IconButton
-              onClick={decrease}
+              onClick={onDecrease}
               sx={{ color: iconColor }}
               edge="start"
             >
@@ -65,7 +67,11 @@ export default function CountInputField({ id }: ICountInputField) {
         }
         endAdornment={
           <InputAdornment position="end">
-            <IconButton onClick={increase} sx={{ color: iconColor }} edge="end">
+            <IconButton
+              onClick={onIncrease}
+              sx={{ color: iconColor }}
+              edge="end"
+            >
               <AddIcon />
             </IconButton>
           </InputAdornment>

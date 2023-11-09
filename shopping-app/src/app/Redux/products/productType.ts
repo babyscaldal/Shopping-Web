@@ -13,4 +13,16 @@ export interface IProductResponse {
   image: string
   gallery: string[]
   rating: IRating
+  totalPrice?: number
+  quantity: number
+}
+
+export interface IComments {
+  createdAt?: string
+  updateAt?: string
+  productId: number
+  content: string
+  rate: number
+  id?: number
+  username: string
 }

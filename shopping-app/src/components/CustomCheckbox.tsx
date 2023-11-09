@@ -23,7 +23,6 @@ export default function CustomCheckbox({
       name={name}
       control={control}
       render={({ field: { value, onChange } }) => {
-        console.log(value)
         useEffect(() => {
           onCheckboxChange && onCheckboxChange(value)
         }, [value])

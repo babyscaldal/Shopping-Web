@@ -1,5 +1,5 @@
-import { Link, useParams } from "react-router-dom"
-import { Container, Row, Col, Carousel } from "react-bootstrap"
+import { useParams } from "react-router-dom"
+import { Container, Row, Col } from "react-bootstrap"
 import { Rating, ButtonGroup, Button } from "@mui/material"
 import CompareIcon from "@mui/icons-material/Compare"
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
@@ -7,11 +7,18 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
 import PopularList from "../components/PopularList"
 import styled from "styled-components"
 import ReviewForm from "../components/ReviewForm"
-import CountInputField from "../components/CountInputField"
 import PhotoGallery from "../components/PhotoGallery"
-import { useState } from "react"
-import { useAppSelector } from "../app/hooks"
-import { filterProductsListState } from "../app/Redux/products/productSlice"
+import { useEffect, useState } from "react"
+import { useAppDispatch, useAppSelector } from "../app/hooks"
+import {
+  addProductsToCartList,
+  addProductsToCompareList,
+  commentsSingleProductState,
+  filterProductsListState,
+  selectedProductState,
+} from "../app/Redux/products/productSlice"
+import { IProductResponse } from "../app/Redux/products/productType"
+import CommentItem from "../components/CommentItem"
 
 const Wrapper = styled.section`
   padding-top: 160px;
@@ -66,21 +73,6 @@ const ReviewInnerWrapper = styled.div`
   background-color: white;
   padding: 30px;
 `
-const ReviewHead = styled.div`
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding-bottom: 20px;
-
-  h4 {
-    font-size: 18px;
-    color: var(--color-1c1c1b);
-  }
-
-  p,
-  a {
-    font-size: 14px;
-    color: var(--color-777777);
-  }
-`
 
 const ReviewFormContainer = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -90,29 +82,29 @@ const ReviewFormContainer = styled.div`
   }
 `
 
-const ReviewContent = styled.p`
-  font-size: 14px;
-  color: var(--color-777777);
-`
-
-const ReviewBox = styled.div`
-  &:not(:last-child) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-`
-
 const DescriptionWrapper = styled.div`
   font-size: 14px;
   color: var(--color-777777);
 `
 
 function ProductDetail() {
-  const [orderedProduct] = useState(true)
+  const dispatch = useAppDispatch()
   const filterProducts = useAppSelector(filterProductsListState)
+  const selectedProduct = useAppSelector(selectedProductState)
   const params = useParams()
   const currentProduct = filterProducts?.find(
-    (product) => product?.id === Number(params.id),
+    (product: IProductResponse) => product?.id === Number(params.id),
   )
+
+  const productComments = useAppSelector(commentsSingleProductState)
+
+  const [rate, setRate] = useState<number>(0)
+
+  useEffect(() => {
+    if (currentProduct) {
+      setRate(currentProduct.rating.rate)
+    }
+  }, [currentProduct])
 
   return (
     <Wrapper>
@@ -135,7 +127,7 @@ function ProductDetail() {
                     readOnly
                     size="small"
                     name="simple-controlled"
-                    value={currentProduct?.rating?.rate}
+                    value={rate}
                   />
 
                   <p className="mb-0 t-review">
@@ -176,45 +168,37 @@ function ProductDetail() {
                   <ProductData className="product-data">Watch</ProductData>
                 </div>
 
-                <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
-                  <div className="">
-                    <label
-                      style={{
-                        fontWeight: 500,
-                        fontSize: "14px",
-                        color: "var(--color-1c1c1b)",
-                      }}
-                      htmlFor=""
-                    >
-                      Quantity:
-                    </label>
-                    <div className="mb-3">
-                      <CountInputField id={"product-detail-count"} />
-                    </div>
-                    <ButtonGroup
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      aria-label="action"
-                    >
-                      <Button
-                        startIcon={<AddShoppingCartIcon />}
-                        color="warning"
-                      >
-                        Buy It Now
-                      </Button>
-                      <Button startIcon={<CompareIcon />} color="info">
-                        Add to compare
-                      </Button>
-                      <Button
-                        startIcon={<AddShoppingCartIcon />}
-                        color="secondary"
-                      >
-                        Add to Cart
-                      </Button>
-                    </ButtonGroup>
-                  </div>
-                </div>
+                <ButtonGroup
+                  size="small"
+                  variant="contained"
+                  color="primary"
+                  aria-label="action"
+                >
+                  <Button
+                    onClick={() => {
+                      dispatch(addProductsToCompareList(selectedProduct))
+                    }}
+                    startIcon={<CompareIcon />}
+                    color="info"
+                  >
+                    Add to compare
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      dispatch(
+                        addProductsToCartList({
+                          ...selectedProduct,
+                          totalPrice:
+                            selectedProduct.price * selectedProduct.quantity,
+                        }),
+                      )
+                    }}
+                    startIcon={<AddShoppingCartIcon />}
+                    color="secondary"
+                  >
+                    Add to Cart
+                  </Button>
+                </ButtonGroup>
               </div>
             </MainProductDetails>
           </Col>
@@ -240,39 +224,14 @@ function ProductDetail() {
           <Col xs={12}>
             <H3Style id="review">Reviews</H3Style>
             <ReviewInnerWrapper className="review-inner-wrapper">
-              <ReviewHead className="review-head d-flex justify-content-between align-items-end">
-                <div>
-                  <h4 className="mb-2">Customer Reviews</h4>
-                  <div className="d-flex align-items-center gap-10">
-                    <p className="mb-0">Based on 2 Reviews</p>
-                  </div>
-                </div>
-                {orderedProduct && (
-                  <div>
-                    <a className="text-dark text-decoration-underline" href="">
-                      Write a Review
-                    </a>
-                  </div>
-                )}
-              </ReviewHead>
               <ReviewFormContainer className="review-form py-4">
                 <h4>Write a Review</h4>
                 <ReviewForm />
               </ReviewFormContainer>
               <div className="reviews mt-4">
-                <ReviewBox className="review">
-                  <div className="d-flex gap-10 align-items-center">
-                    <h6 className="mb-0">Son Nguyen</h6>
-                    <Rating size="small" name="simple-controlled" value={5} />
-                  </div>
-                  <ReviewContent className="mt-3">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                    Consectetur fugit ut excepturi quos. Id reprehenderit
-                    voluptatem placeat consequatur suscipit ex. Accusamus dolore
-                    quisquam deserunt voluptate, sit magni perspiciatis quas
-                    iste?
-                  </ReviewContent>
-                </ReviewBox>
+                {productComments?.map((comment) => (
+                  <CommentItem key={comment.id} comment={comment} />
+                ))}
               </div>
             </ReviewInnerWrapper>
           </Col>
